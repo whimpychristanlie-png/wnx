@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" width="600" height="800">
+ <defs><style>.name{font-family:Georgia,serif;fill:#344d40;text-anchor:middle}.small{font-family:Arial,'PingFang SC','Microsoft YaHei',sans-serif;fill:#617260;text-anchor:middle}</style></defs>
+ <rect x="0" y="0" width="600" height="800" fill="#fffef9"/>
+ <rect x="18" y="18" width="564" height="764" rx="16" fill="none" stroke="#526b55" stroke-width="1"/>
+ <text x="300" y="54" class="small" font-size="11" letter-spacing="3">A MOMENT TO REMEMBER · 幸福留影</text>
+ <rect x="70" y="115" width="460" height="490" fill="#ffffff"/>
+ <rect x="65" y="110" width="470" height="500" fill="none" stroke="#526b55"/>
+ <g fill="#a8b698" stroke="#819578" stroke-width="1" opacity=".8"><path d="M29 126Q33 64 88 29" fill="none"/><ellipse cx="39" cy="87" rx="7" ry="18" transform="rotate(-25 39 87)"/><ellipse cx="59" cy="64" rx="7" ry="18" transform="rotate(42 59 64)"/><ellipse cx="75" cy="40" rx="6" ry="15" transform="rotate(38 75 40)"/></g>
+ <g transform="translate(600 800) rotate(180)" fill="#a8b698" stroke="#819578" stroke-width="1" opacity=".8"><path d="M29 126Q33 64 88 29" fill="none"/><ellipse cx="39" cy="87" rx="7" ry="18" transform="rotate(-25 39 87)"/><ellipse cx="59" cy="64" rx="7" ry="18" transform="rotate(42 59 64)"/></g>
+ <text x="300" y="690" class="name" font-size="31">{{couple.groom.name}} &amp; {{couple.bride.name}}</text>
+ <text x="300" y="722" class="small" font-size="12" letter-spacing="2">20.12.2026 · RUMAH 30</text>
+ <text x="300" y="756" class="small" font-size="10">Terima kasih telah hadir · 感谢您的到来</text>
+</svg>

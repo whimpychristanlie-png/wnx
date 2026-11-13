@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 420" role="img" aria-labelledby="coverLabel">
+<title id="coverLabel">Undangan Whimpy dan Xinxin</title>
+<defs>
+  <linearGradient id="ivoryPaper" x2="0" y2="1"><stop stop-color="#fffef9"/><stop offset="1" stop-color="#f6f2e8"/></linearGradient>
+  <style>
+    .serif{font-family:Georgia,'Times New Roman',serif;fill:#30483c;text-anchor:middle}
+    .sans{font-family:Arial,'PingFang SC','Microsoft YaHei',sans-serif;fill:#617361;text-anchor:middle}
+    .guest-name{font-family:Arial,'PingFang SC','Microsoft YaHei',sans-serif;fill:#30483c;text-anchor:middle;font-size:21px;font-weight:600}
+  </style>
+</defs>
+<rect x="18" y="18" width="464" height="384" rx="12" fill="url(#ivoryPaper)"/>
+<rect x="29" y="29" width="442" height="362" rx="7" fill="none" stroke="#bac4b0" stroke-width="1"/>
+<!-- Delicate native vector foliage, matching the garden palette. -->
+<g fill="#99a78c" stroke="#7e9178" stroke-width="1" opacity=".8">
+ <path d="M42 117Q50 67 107 44" fill="none"/>
+ <ellipse cx="52" cy="92" rx="6" ry="15" transform="rotate(-35 52 92)"/>
+ <ellipse cx="66" cy="76" rx="6" ry="14" transform="rotate(40 66 76)"/>
+ <ellipse cx="79" cy="61" rx="5" ry="13" transform="rotate(-40 79 61)"/>
+ <ellipse cx="96" cy="50" rx="5" ry="12" transform="rotate(48 96 50)"/>
+ <path d="M458 303Q450 353 393 376" fill="none"/>
+ <ellipse cx="448" cy="328" rx="6" ry="15" transform="rotate(-35 448 328)"/>
+ <ellipse cx="434" cy="344" rx="6" ry="14" transform="rotate(40 434 344)"/>
+ <ellipse cx="421" cy="359" rx="5" ry="13" transform="rotate(-40 421 359)"/>
+</g>
+<text x="250" y="73" class="sans" font-size="10" letter-spacing="3">THE WEDDING OF</text>
+<text x="250" y="106" class="serif" font-size="17" font-style="italic">W &amp; X</text>
+<text x="250" y="154" class="serif" font-size="34">{{couple.groom.name}} &amp; {{couple.bride.name}}</text>
+<text x="250" y="183" class="sans" font-size="12" letter-spacing="1">20 DESEMBER 2026 · RUMAH 30</text>
+<path d="M207 205H293" stroke="#b8a17c" stroke-width="1"/>
+<text x="250" y="235" class="sans" font-size="12">Kepada tamu terhormat · 致亲爱的来宾</text>
+<text x="250" y="265" class="guest-name">Tamu Undangan</text>
+<g transform="translate(250 323)" style="cursor:pointer">
+ <rect x="-145" y="-22" width="290" height="44" rx="22" fill="#526b55"/>
+ <text x="0" y="5" text-anchor="middle" font-family="Arial,'PingFang SC','Microsoft YaHei',sans-serif" font-size="13" fill="#fffef9">Buka Undangan · 开启邀请  →</text>
+</g>
+<text x="250" y="374" class="sans" font-size="10" letter-spacing="1">20 · 12 · 2026</text>
+</svg>
