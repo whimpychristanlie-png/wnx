@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --glow-gold: #d4af3755;
+    --veil-strong: #243a31d9;
+    color-scheme: light;
+  }
+  html, body, #root { height: 100%; }
+  /* iOS Safari reports 100% as the LARGE viewport — the one with the URL bar
+     hidden — so anything sized to it hangs off the top and bottom of what the
+     guest can actually see. dvh tracks the visible area as the bar shows and
+     hides. The 100% above stays as the fallback for anything older. */
+  @supports (height: 100svh) {
+    /* svh is the SMALL viewport — URL bar showing. The body cannot scroll
+       while the map is up, so on iOS the bar never collapses and svh is the
+       honest number. Overlays refine this from visualViewport at runtime. */
+    html, body, #root { height: 100svh; }
+  }
+  body {
+    margin: 0;
+    background: #243a31;
+    font-family: theme('fontFamily.body');
+    color: #f8f6ef;
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* The canvas owns the gestures; the page never scrolls behind it. */
+  body.is-playing { overflow: hidden; touch-action: none; }
+  :focus-visible { outline: none; box-shadow: theme('boxShadow.focus'); border-radius: 4px; }
+  img { max-width: 100%; }
+}
+
+@layer components {
+  .pixel-btn {
+    @apply font-pixel text-[13px] font-semibold leading-5 tracking-[0.2px] border border-wood-400
+           rounded-lg min-h-tap px-5 py-3.5 cursor-pointer select-none
+           transition-[transform,box-shadow] duration-75;
+  }
+  .pixel-btn:active:not(:disabled) { @apply translate-y-[3px] shadow-pressed; }
+  .pixel-btn:disabled { @apply opacity-45 cursor-not-allowed shadow-none; }
+  .btn-primary { @apply pixel-btn bg-emerald-500 text-parchment-100 border-emerald-500 shadow-none; }
+  .btn-secondary { @apply pixel-btn bg-parchment-100 text-emerald-500 shadow-none; }
+  .btn-ghost { @apply pixel-btn bg-transparent text-ink-600 border-wood-400 shadow-none; }
+
+  .label-cap { @apply text-[11px] font-bold tracking-[1.4px] text-ink-muted; }
+  .doc-card { @apply bg-parchment-100 border border-wood-400 rounded-lg p-5 shadow-none; }
+  .field {
+    @apply w-full bg-parchment-100 border border-wood-400 rounded-lg px-4 py-3
+           min-h-tap text-[15px] leading-6 text-ink-900 font-body;
+  }
+  .field:focus { @apply outline-none border-gold-500 shadow-focus; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@keyframes wq-toast { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes wq-rise  { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes wq-seal  { 0%,100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+@keyframes wq-bob   { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes wq-flash { from { opacity: 1; } to { opacity: 0; } }
+@keyframes wq-confetti { from { transform: translateY(0) rotate(0); } to { transform: translateY(460px) rotate(540deg); } }
+
+
+/* Quiet garden theme with readable bilingual labels. */
+:root { --glow-gold:#b6a58644; --veil-strong:#1f332cc9; }
+body { background:#243a31; }
+button, a, input, textarea { touch-action:manipulation; }
+button:disabled { cursor:not-allowed; }
+button:focus-visible, a:focus-visible { outline:3px solid #b6a586; outline-offset:3px; }
+.bilingual-zh { font-family:'PingFang SC','Microsoft YaHei',sans-serif; letter-spacing:.03em; }
+.dress-swatches { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; text-align:center; }
+.dress-swatch { display:block; width:38px; height:38px; border:1px solid #243a3120; border-radius:50%; margin:0 auto 8px; box-shadow:0 0 0 4px #fffef9; }
+.bible-card { background:#eef1e7; border:1px solid #cbd3c5; border-radius:18px; padding:24px 20px; text-align:center; }
+.bible-card [lang='zh-Hans'] { font-size:19px; line-height:1.85; }
+@media(max-width:360px) { .dress-swatches{gap:8px;} .bible-card{padding:20px 16px;} }

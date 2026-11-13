@@ -1,0 +1,24 @@
+/* Shared opening card: game and reading invitation. */
+.opening-screen { position:relative; min-height:100%; width:100%; display:grid; place-items:center; padding:max(20px,env(safe-area-inset-top)) 20px max(20px,env(safe-area-inset-bottom)); isolation:isolate; overflow-y:auto; background:#54634d; color:#354a35; }
+.opening-screen::before { content:''; position:absolute; inset:0; background:linear-gradient(#243a3120,#243a3145),url('/assets/rumah30/courtyard.png') center/cover; z-index:-1; }
+.invitation-cover { position:relative; width:100%; max-width:440px; background:#faf8ef; border:1px solid #c6cbb8; border-radius:26px; padding:44px 28px 30px; text-align:center; box-shadow:0 18px 60px #1e332c40,inset 0 0 0 6px #fffef980; }
+.cover-kicker { margin:0 0 20px; font:600 10px/1.5 'Plus Jakarta Sans',Arial,sans-serif; letter-spacing:.3em; color:#596b4d; }
+.cover-monogram { margin:0 0 22px; color:#6b7954; font:italic 42px/1.1 Georgia,serif; }
+.cover-names { margin:0; font:500 clamp(29px,7.7vw,39px)/1.25 'Playfair Display',Georgia,serif; letter-spacing:-.035em; color:#354a35; }
+.cover-date { margin:20px 0 0; font:500 11px/1.7 'Plus Jakarta Sans',Arial,sans-serif; letter-spacing:.1em; color:#647256; }
+.cover-divider { width:54px; height:1px; border:0; background:#b6a586; margin:24px auto; }
+.cover-to { margin:0; font:italic 16px/1.6 Georgia,serif; color:#596b4d; }
+.cover-to-zh { display:block; font:400 13px/1.8 'PingFang SC','Microsoft YaHei',sans-serif; font-style:normal; }
+.cover-guest { margin:14px 0 24px; font:500 clamp(20px,5vw,25px)/1.5 'Playfair Display',Georgia,'PingFang SC',serif; color:#354a35; overflow-wrap:anywhere; }
+.cover-open { display:flex; align-items:center; justify-content:center; gap:12px; width:100%; min-height:50px; padding:12px 16px; border:0; border-radius:999px; background:#526b55; color:#fffef9; font:500 14px/1.5 'Plus Jakarta Sans','PingFang SC',Arial,sans-serif; cursor:pointer; transition:background .2s,transform .2s; }
+.cover-open:hover { background:#3f5944; transform:translateY(-1px); }
+.cover-open:focus-visible { outline:3px solid #b6a586; outline-offset:4px; }
+.cover-footer { margin:26px 0 0; font:500 10px/1.5 Arial,sans-serif; letter-spacing:.32em; color:#6b7954; }
+.cover-leaves { position:absolute; width:94px; height:108px; pointer-events:none; opacity:.62; }
+.cover-leaves.top { left:9px; top:9px; }
+.cover-leaves.bottom { right:9px; bottom:9px; transform:rotate(180deg); }
+.cover-leaves svg { display:block; width:100%; height:100%; }
+.opening-screen.opening-leave .invitation-cover { opacity:0; transform:translateY(-20px); transition:opacity .6s,transform .6s; }
+@media(min-width:700px) { .invitation-cover { padding:52px 36px 34px; } }
+@media(max-height:650px) { .invitation-cover{padding:24px 22px 20px;} .cover-monogram{margin-bottom:12px;font-size:32px;} .cover-kicker{margin-bottom:12px;} .cover-divider{margin:16px auto;} .cover-guest{margin:10px 0 18px;} .cover-footer{margin-top:18px;} }
+@media(prefers-reduced-motion:reduce) { .opening-screen.opening-leave .invitation-cover { transition:none; } }
