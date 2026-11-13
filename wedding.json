@@ -1,0 +1,95 @@
+{
+  "title": "The Wedding of Whimpy & Xinxin | 婚礼邀请",
+  "hashtag": "",
+  "location": {
+    "name": "Rumah 30",
+    "city": "Kota Bogor, Jawa Barat · 印度尼西亚茂物"
+  },
+  "couple": {
+    "bride": {
+      "name": "Xinxin",
+      "fullName": "Zu Xinxin",
+      "orderInFamily": "Putri kedua dari · 次女",
+      "fatherName": "Zu Wei",
+      "motherName": "Yu Fenghua",
+      "instagram": "",
+      "bio": "",
+      "attire": "Gaun pengantin putih dengan detail renda dan veil · 白色蕾丝婚纱与头纱"
+    },
+    "groom": {
+      "name": "Whimpy",
+      "fullName": "Whimpy Christanlie",
+      "orderInFamily": "Putra pertama dari · 长子",
+      "fatherName": "Alm. Kuipo",
+      "motherName": "Linda",
+      "instagram": "",
+      "bio": "",
+      "attire": "Jas hitam, kemeja putih, dasi kupu-kupu hitam · 黑色西装、白衬衫、黑色领结"
+    }
+  },
+  "events": {
+    "akad": {
+      "title": "Pemberkatan · 婚礼祝福仪式",
+      "date": "2026-12-20",
+      "displayDate": "Minggu, 20 Desember 2026 · 2026年12月20日 星期日",
+      "time": "15:00 WIB – selesai / 至仪式结束",
+      "venue": "Rumah 30",
+      "address": "Jl. Batu Tulis No.30, RT.03/RW.03, Batutulis, Kec. Bogor Sel., Kota Bogor, Jawa Barat 16133",
+      "mapsUrl": "https://maps.app.goo.gl/GMGhsgLDUdM2oPkk7",
+      "dresscode": "Garden Semi-Formal · 花园半正式着装 | Beige 米色 · Taupe 灰褐色 · Mocha 摩卡色 · Sage 鼠尾草绿"
+    },
+    "resepsi": {
+      "title": "Resepsi Pernikahan · 婚宴",
+      "date": "2026-12-20",
+      "displayDate": "Minggu, 20 Desember 2026 · 2026年12月20日 星期日",
+      "time": "17:00 - 20:00 WIB",
+      "venue": "Rumah 30",
+      "address": "Jl. Batu Tulis No.30, RT.03/RW.03, Batutulis, Kec. Bogor Sel., Kota Bogor, Jawa Barat 16133",
+      "mapsUrl": "https://maps.app.goo.gl/GMGhsgLDUdM2oPkk7",
+      "dresscode": "Garden Semi-Formal · 花园半正式着装 | Beige 米色 · Taupe 灰褐色 · Mocha 摩卡色 · Sage 鼠尾草绿"
+    }
+  },
+  "ceremonyStart": "2026-12-20T15:00:00+07:00",
+  "quote": {
+    "arabic": "在这一切之外，要存着爱心，爱心就是联络全德的。",
+    "translation": "Dan di atas semuanya itu: kenakanlah kasih, sebagai pengikat yang mempersatukan dan menyempurnakan.",
+    "source": "Kolose 3:14 (TB) · 歌罗西书 3:14（和合本）"
+  },
+  "blessing": {
+    "text": "Terima kasih telah menjadi bagian dari hari bahagia kami.",
+    "meaning": "感谢您见证我们的幸福时刻。",
+    "source": "Whimpy & Xinxin"
+  },
+  "bgmUrl": "/assets/audio/bgm.m4a",
+  "invitationBgm": {
+    "url": "/assets/audio/gao-bai-qi-qiu.mp3",
+    "credit": "告白气球 (Love Confession) — 周杰伦 Jay Chou"
+  },
+  "ngobrol": {
+    "names": {
+      "bride": "Xinxin",
+      "groom": "Whimpy"
+    },
+    "title": "Seberapa Kenal Kamu Sama Kami? 👀",
+    "subtitle": "Nggak ada jawaban benar atau salah. Pilih aja, nanti yang ditunjuk yang jawab.",
+    "questions": [],
+    "verdicts": {
+      "both": {
+        "title": "",
+        "body": ""
+      },
+      "tie": {
+        "title": "",
+        "body": ""
+      },
+      "bride": {
+        "title": "",
+        "body": ""
+      },
+      "groom": {
+        "title": "",
+        "body": ""
+      }
+    }
+  }
+}
