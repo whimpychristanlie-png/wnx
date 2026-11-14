@@ -28,7 +28,7 @@ const WISH_MAX = 2;
 /** Half-width of a guest's tap target, in world px. */
 const TAP_REACH = 46;
 
-/** Where the couple sit, painted into the map. */
+/** The couple and their approach are centred above the open stairway. */
 const PELAMINAN = LANDMARKS.find((l) => l.id === 'pelaminan')!;
 const HOP_MS = 420;
 const FLIGHT_MS = 520;
@@ -36,7 +36,7 @@ interface Heart { x: number; y: number; vx: number; vy: number; life: number; ma
 const HEART = ['.X.X.', 'XXXXX', 'XXXXX', '.XXX.', '..X..'];
 
 /**
- * The couple as painted into the map, measured off it: each one's centre, and
+ * Each spouse's centre and
  * the spot beside them where a guest stands to greet them — beside, not in
  * front, because characters draw over the painting and would cover their faces.
  */
@@ -46,7 +46,8 @@ const COUPLE: Record<Who, { x: number; spot: Vec2; face: Facing }> = {
 };
 /** From the groom to the bride the guest steps down and round, not across the couple. */
 const DIP: Vec2 = { x: 394, y: 290 };
-const HEAD_Y = 177;
+const COUPLE_FOOT_Y = 263;
+const HEAD_Y = 195;
 const MEET_SPEED = 0.11; // px/ms: an unhurried step
 interface Bubble { text: string; x: number; y: number; delay: number; life: number; max: number }
 const SALAMAN_ICONS = '/assets/game/salaman_icons.png';
@@ -611,10 +612,10 @@ export class Engine {
       });
     }
 
-    // The approved Rumah 30 map already contains the couple.
+    // Independent sprites keep the couple the same visible height as guests.
     if (!this.assets.bakedCouple) {
       cast.push({
-        y: 270,
+        y: COUPLE_FOOT_Y,
         paint: () => this.drawCouple(ctx, cx, cy),
       });
     }
@@ -677,32 +678,24 @@ export class Engine {
     if (!sheet) return;
 
     const groomX = COUPLE.groom.x - cx;
-    const groomY = 286 - cy;
+    const groomY = COUPLE_FOOT_Y - cy;
     const brideX = COUPLE.bride.x - cx;
-    const brideY = 286 - cy;
+    const brideY = COUPLE_FOOT_Y - cy;
 
     if (this.profile.shadows) {
       drawShadow(ctx, groomX, groomY);
       drawShadow(ctx, brideX, brideY);
     }
 
-    // Groom: col 0, row = couplePose.groom
-    const COUPLE_CELL_W = sheet.width / 2;
-    const COUPLE_CELL_H = sheet.height / 4;
-    const gRow = this.couplePose.groom;
-    ctx.drawImage(
-      sheet,
-      0, gRow * COUPLE_CELL_H, COUPLE_CELL_W, COUPLE_CELL_H,
-      Math.round(groomX - DRAW_W / 2), Math.round(groomY - DRAW_H), DRAW_W, DRAW_H,
-    );
-
-    // Bride: col 1, row = couplePose.bride
-    const bRow = this.couplePose.bride;
-    ctx.drawImage(
-      sheet,
-      COUPLE_CELL_W, bRow * COUPLE_CELL_H, COUPLE_CELL_W, COUPLE_CELL_H,
-      Math.round(brideX - DRAW_W / 2), Math.round(brideY - DRAW_H), DRAW_W, DRAW_H,
-    );
+    const height=DRAW_H*this.assets.guestBodyRatio;
+    const paint=(who:Who,col:number,x:number,y:number)=>{
+      const frame=this.assets.coupleFrames[this.couplePose[who]*2+col];
+      const width=height*frame.w/frame.h;
+      ctx.drawImage(sheet,frame.x,frame.y,frame.w,frame.h,
+        Math.round(x-width/2),Math.round(y-height),width,height);
+    };
+    paint('groom',0,groomX,groomY);
+    paint('bride',1,brideX,brideY);
   }
 
   /** Option C: Ethereal illumination and descending light rays during doa. */

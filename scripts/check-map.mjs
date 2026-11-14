@@ -244,28 +244,43 @@ ok(TAP_REACH * 2 >= 88, 'tap target clears the 44px minimum on both sides of cen
   }
 }
 
-// Rumah 30 walls: direct controls must stop at the visible wall, while a tap
-// to a real destination must route around it. The gateway remains an underpass.
+// The photographed roof edges and planting are solid. The stage is reached
+// through the central opening, with no bypass around either facade wing.
 {
   const {Player}=await import('../src/game/Player.ts');
+  const {STAGE_DOOR}=await import('../src/game/landmarks.ts');
   const push=(from,stick)=>{
     const p=new Player(from);p.stick=stick;
+    ok(!blocked(p.x,p.y),'a direct-control check starts on open floor');
     for(let i=0;i<300;i++) {
       p.update();
       assert.ok(!blocked(p.x,p.y),'direct input never enters solid scenery');
     }
     return p;
   };
-  const back=push({x:390,y:500},{x:0,y:-1});
-  ok(back.y>=445 && back.y<460,'holding up stops before the closed back wall');
-  const left=push({x:350,y:1020},{x:-1,y:0});
-  ok(left.x>=324 && left.x<340,'the left gateway wall stops sideways movement');
+  const centre=push({x:384,y:500},{x:0,y:-1});
+  ok(centre.y<285 && centre.y>=271,'holding up climbs the centre stairs into the stage, stopping before the couple');
+  const left=push({x:384,y:1060},{x:-1,y:0});
+  ok(left.x>=349 && left.x<365,'the flower pot beside the gate is solid');
   const right=push({x:400,y:990},{x:1,y:0});
   ok(right.x<=431 && right.x>415,'the right gateway wall stops sideways movement');
-  const outer=push({x:620,y:350},{x:1,y:0});
-  ok(outer.x<=638 && outer.x>625,'the right veranda cannot be used to climb its roof');
+  const outer=push({x:600,y:710},{x:1,y:0});
+  ok(outer.x<=614 && outer.x>602,'the right veranda ends before the ivy and roof');
+  for(const x of [200,600]) {
+    const side=push({x,y:500},{x:0,y:-1});
+    ok(side.y>=454 && side.y<465,'neither side of the facade provides a route to the stage');
+  }
   const wing=push({x:270,y:825},{x:0,y:1});
   ok(wing.y<=845 && wing.y>830,'the left roof wing is solid from the garden');
+  const front=push({x:600,y:1105},{x:0,y:-1});
+  ok(front.y>=1093 && front.y<1110,'the right raised flower bed cannot be entered from the forecourt');
+
+  for(const [x,y,label] of [
+    [640,1060,'right forecourt bed'],[280,1055,'left gate flowers'],
+    [155,360,'left facade roof'],[620,360,'right facade roof'],
+    [645,445,'right upper ivy'],[650,505,'right side wall'],
+    [680,600,'roof behind buffet'],[100,400,'left side wall'],
+  ]) ok(blocked(x,y),`${label}: the photographed shortcut is closed`);
 
   const route=(from,to)=>{
     const p=new Player(from),seen=[];p.walkTo(to);
@@ -279,8 +294,13 @@ ok(TAP_REACH * 2 >= 88, 'tap target clears the 44px minimum on both sides of cen
   const entry=route(SPAWN,{x:384,y:800});
   ok(entry.some(p=>p.y>850&&p.y<935),'the entrance still leads under the roof into the garden');
   ok(entry.filter(p=>p.y>850&&p.y<935).every(p=>p.x>=324&&p.x<=431),'the entrance path stays inside the doorway');
-  const stage=route({x:384,y:500},{x:390,y:292});
-  ok(stage.some(p=>p.y>330&&p.y<435&&(p.x<183||p.x>585)),'the pelaminan is reached via a side entrance around the closed wall');
+  for(const start of [SPAWN,...LANDMARKS.filter(l=>l.id!=='pelaminan').map(l=>({x:l.sx,y:l.sy}))]) {
+    const stage=route(start,{x:390,y:292});
+    const crossing=stage.filter(p=>p.y>330&&p.y<435);
+    ok(crossing.length>0 && crossing.every(p=>p.x>=STAGE_DOOR.x+9 && p.x<=STAGE_DOOR.x+STAGE_DOOR.w-9),'every route to the stage crosses the central door');
+    const exit=route({x:390,y:292},start);
+    ok(exit.filter(p=>p.y>330&&p.y<435).every(p=>p.x>=STAGE_DOOR.x+9 && p.x<=STAGE_DOOR.x+STAGE_DOOR.w-9),'return routes also use the centre, never a side roof');
+  }
 }
 
 // The ring the engine draws is the trigger zone itself, so the prompt can

@@ -21,7 +21,7 @@ export default function CharacterSelect({ initialName, initialOutfit, onStart }:
     <div className="relative grid h-full place-items-center overflow-hidden bg-wood-900 p-5">
       <div
         aria-hidden
-        className="absolute inset-0 bg-[url('/assets/rumah30/map-v5.png')] bg-cover bg-top brightness-[.42]"
+        className="absolute inset-0 bg-[url('/assets/rumah30/map-v6.png')] bg-cover bg-top brightness-[.42]"
       />
       <div
         className="relative w-full max-w-[360px] rounded-lg border-4 border-gold-500 bg-parchment-200

@@ -244,7 +244,7 @@ function Pick({ outfit, onPick, onSkip }: { outfit: OutfitId; onPick: (m: Travel
 
   return (
     <div className="relative grid h-full place-items-center overflow-hidden bg-wood-900 p-5">
-      <div aria-hidden className="absolute inset-0 bg-[url('/assets/rumah30/map-v5.png')] bg-cover bg-bottom brightness-[.42]" />
+      <div aria-hidden className="absolute inset-0 bg-[url('/assets/rumah30/map-v6.png')] bg-cover bg-bottom brightness-[.42]" />
       <div
         className="relative w-full max-w-[360px] rounded-xl border border-wood-400 bg-parchment-200 px-5 py-6 text-center shadow-modal"
         style={{ animation: 'wq-rise 320ms ease-out' }}

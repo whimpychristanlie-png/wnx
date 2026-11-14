@@ -7,5 +7,5 @@ export const DRESS_COLORS = [
 export const VENUE_IMAGES = {
   courtyard:'/assets/rumah30/courtyard.png',
   pelaminan:'/assets/rumah30/pelaminan.png',
-  map:'/assets/rumah30/map-v5.png',
+  map:'/assets/rumah30/map-v6.png',
 } as const;

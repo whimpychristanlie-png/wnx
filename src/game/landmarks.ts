@@ -3,9 +3,7 @@ import type { Landmark, Vec2 } from './types';
 export const WORLD_W = 768;
 export const WORLD_H = 1152;
 
-/** Landmarks measured on the approved Rumah 30 illustration.
- * The couple is painted into this map, so Engine must not draw a second pair.
- */
+/** Landmarks measured on the Rumah 30 map; the couple is drawn separately. */
 export const LANDMARKS: Landmark[] = [
   {id:'pelaminan',label:'MEMPELAI',target:'pasangan',x:390,y:230,sx:390,sy:292,radius:58,signOffset:49},
   {id:'panggung',label:'ACARA',target:'acara',x:140,y:565,sx:218,sy:620,radius:52,signOffset:40},
@@ -19,21 +17,20 @@ export const SPAWN: Vec2 = {x:384,y:1105};
 
 export type FloorRect = readonly [x:number,y:number,w:number,h:number];
 
-/** Continuous floor areas: the lawn, verandas, side entrances and forecourt.
- * Everything outside them is scenery, including roofs and the closed back wall.
- * The entrance's centre is a passage UNDER the roof, drawn above the guests.
+/** The only entrance to the stage is the open central door and stairway. */
+export const STAGE_DOOR = { x:350, y:300, w:70, h:155 };
+
+/** Continuous floor areas. Roof edges, flower beds and the stage's sides are
+ * scenery, not shortcuts. The lower gate remains an underpass below its roof.
  */
 export const WALK_AREAS: readonly FloorRect[] = [
   [176,440,414,415],              // lawn
-  [75,440,140,493],              // left veranda, including the path beside the booth
-  [585,440,116,510],             // right veranda
-  [145,250,500,74],              // front of the pelaminan
-  [125,300,58,156],              // left approach around the back wall
-  [585,300,62,156],              // right approach around the back wall
+  [118,449,97,481],             // clear paving in front of the left columns
+  [575,449,48,391],             // right veranda ends before the lower roof wing
+  [175,246,430,66],             // stage floor, inside its walls
+  [STAGE_DOOR.x,STAGE_DOOR.y,STAGE_DOOR.w,STAGE_DOOR.h],
   [315,840,125,288],             // entrance underpass
-  [165,925,150,209],             // left forecourt
-  [585,925,100,209],             // right reception lane
-  [170,1082,515,52],             // open entrance forecourt
+  [170,1092,515,42],             // forecourt in front of both planted walls
 ];
 
 /** Keep the guest's feet and shoulders clear of walls; paths and NPCs use the
@@ -45,17 +42,20 @@ const HALF_H = 5;
 /** Solid walls, planters and furniture, in the map's 768 × 1152 coordinates. */
 export const BLOCKERS: readonly [number,number,number,number][] = [
   [210,145,350,100],
-  [183,324,402,116],             // closed back wall and doors
+  [342,205,103,61],              // bride and groom; guests greet from beside them
+  [0,312,350,137], [420,312,348,137], // facade is closed on both sides of the central door
   [210,850,105,85], [440,850,155,85], // roof wings beside the open passage
   [0,930,315,107],               // entrance wall left of the doorway
   [440,930,150,145],             // entrance wall right of the doorway
   [35,1030,190,57],              // planted hedge in the left forecourt
+  [245,1020,95,68],              // flower pot and column left of the lower doorway
+  [585,1014,160,74],             // right forecourt wall and raised flower bed
   [0,1100,190,52],               // front perimeter planting
   [249,453,25,38], [485,453,25,38], // upper tree bases
   [212,795,36,48], [537,795,36,48], // lower tree bases
   [93,473,64,49],                // left cafe table and chairs
   [85,540,85,66],                // musical instruments
-  [610,535,99,157],              // buffet table
+  [600,535,109,157],             // buffet table, including its front edge
   [645,700,70,50],               // right cafe table
   [35,730,130,147],              // photobooth backdrop and camera
   [440,1000,145,82],
