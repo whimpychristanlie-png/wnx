@@ -1,4 +1,4 @@
-import { LANDMARKS, SPAWN, WORLD_W, WORLD_H, ZONE_SQUASH, camClamp, landmarkAt, nearest } from './landmarks';
+import { ENTRY_CANOPY, LANDMARKS, SPAWN, WORLD_W, WORLD_H, ZONE_SQUASH, camClamp, landmarkAt, nearest } from './landmarks';
 import { Player } from './Player';
 import { Npc, spawnNpcs, freeSpot, admit } from './Npc';
 import { Particles, detectProfile } from './Particles';
@@ -631,6 +631,19 @@ export class Engine {
       },
     });
     cast.sort((a, b) => a.y - b.y).forEach((c) => c.paint());
+
+    // Guests use the doorway under the entrance roof, never its painted top.
+    // Redraw only the canopy silhouette over them; the open lawn stays visible.
+    const roof=ENTRY_CANOPY;
+    if (roof.y+roof.h>=cy && roof.y<=cy+vh) {
+      ctx.save();
+      ctx.beginPath();
+      roof.outline.forEach((p,i) => i ? ctx.lineTo(p.x-cx,p.y-cy) : ctx.moveTo(p.x-cx,p.y-cy));
+      ctx.closePath();
+      ctx.clip();
+      ctx.drawImage(this.assets.map,roof.x,roof.y,roof.w,roof.h,roof.x-cx,roof.y-cy,roof.w,roof.h);
+      ctx.restore();
+    }
 
     // Option C: Salaman VFX layers
     this.drawDoa(cx, cy);

@@ -16,8 +16,8 @@ const CELL = 16;
 const COLS = Math.ceil(WORLD_W / CELL);
 const ROWS = Math.ceil(WORLD_H / CELL);
 
-/** Keeps paths off the wall by roughly half a body width. */
-const CLEARANCE = 10;
+/** blocked() already includes the body's footprint; leave a small extra margin. */
+const CLEARANCE = 3;
 
 const walkable = new Uint8Array(COLS * ROWS);
 for (let cy = 0; cy < ROWS; cy++) {

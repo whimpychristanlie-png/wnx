@@ -200,8 +200,8 @@ ok(TAP_REACH * 2 >= 88, 'tap target clears the 44px minimum on both sides of cen
 
   // Tapping anywhere walkable must also work, not just the destinations.
   let unreachable = 0;
-  for (let y = BOUNDS.minY + 10; y <= BOUNDS.maxY; y += 96) {
-    for (let x = BOUNDS.minX + 8; x <= BOUNDS.maxX; x += 96) {
+  for (let y = BOUNDS.minY + 10; y <= BOUNDS.maxY; y += 32) {
+    for (let x = BOUNDS.minX + 8; x <= BOUNDS.maxX; x += 32) {
       if (blocked(x, y)) continue;
       if (walk(starts[0], { x, y }) < 0) unreachable++;
     }
@@ -242,6 +242,45 @@ ok(TAP_REACH * 2 >= 88, 'tap target clears the 44px minimum on both sides of cen
     const r = watch(p, 900);
     ok(r.inPlace === 0 && !p.destination, `and the walk ends cleanly (${r.inPlace} frames on the spot)`);
   }
+}
+
+// Rumah 30 walls: direct controls must stop at the visible wall, while a tap
+// to a real destination must route around it. The gateway remains an underpass.
+{
+  const {Player}=await import('../src/game/Player.ts');
+  const push=(from,stick)=>{
+    const p=new Player(from);p.stick=stick;
+    for(let i=0;i<300;i++) {
+      p.update();
+      assert.ok(!blocked(p.x,p.y),'direct input never enters solid scenery');
+    }
+    return p;
+  };
+  const back=push({x:390,y:500},{x:0,y:-1});
+  ok(back.y>=445 && back.y<460,'holding up stops before the closed back wall');
+  const left=push({x:350,y:1020},{x:-1,y:0});
+  ok(left.x>=324 && left.x<340,'the left gateway wall stops sideways movement');
+  const right=push({x:400,y:990},{x:1,y:0});
+  ok(right.x<=431 && right.x>415,'the right gateway wall stops sideways movement');
+  const outer=push({x:620,y:350},{x:1,y:0});
+  ok(outer.x<=638 && outer.x>625,'the right veranda cannot be used to climb its roof');
+  const wing=push({x:270,y:825},{x:0,y:1});
+  ok(wing.y<=845 && wing.y>830,'the left roof wing is solid from the garden');
+
+  const route=(from,to)=>{
+    const p=new Player(from),seen=[];p.walkTo(to);
+    for(let i=0;i<1500 && p.destination;i++) {
+      p.update();seen.push({x:p.x,y:p.y});
+      assert.ok(!blocked(p.x,p.y),'a routed guest never passes through a wall');
+    }
+    ok(Math.hypot(p.x-to.x,p.y-to.y)<10,'the requested open-floor destination is reached');
+    return seen;
+  };
+  const entry=route(SPAWN,{x:384,y:800});
+  ok(entry.some(p=>p.y>850&&p.y<935),'the entrance still leads under the roof into the garden');
+  ok(entry.filter(p=>p.y>850&&p.y<935).every(p=>p.x>=324&&p.x<=431),'the entrance path stays inside the doorway');
+  const stage=route({x:384,y:500},{x:390,y:292});
+  ok(stage.some(p=>p.y>330&&p.y<435&&(p.x<183||p.x>585)),'the pelaminan is reached via a side entrance around the closed wall');
 }
 
 // The ring the engine draws is the trigger zone itself, so the prompt can

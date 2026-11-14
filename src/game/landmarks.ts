@@ -17,21 +17,58 @@ export const LANDMARKS: Landmark[] = [
 
 export const SPAWN: Vec2 = {x:384,y:1105};
 
-/** Foot-level obstacles measured on the approved Rumah 30 drawing.
- * Roofs and floral canopies are overhead, not solid ground obstacles.
+export type FloorRect = readonly [x:number,y:number,w:number,h:number];
+
+/** Continuous floor areas: the lawn, verandas, side entrances and forecourt.
+ * Everything outside them is scenery, including roofs and the closed back wall.
+ * The entrance's centre is a passage UNDER the roof, drawn above the guests.
  */
+export const WALK_AREAS: readonly FloorRect[] = [
+  [176,440,414,415],              // lawn
+  [75,440,140,493],              // left veranda, including the path beside the booth
+  [585,440,116,510],             // right veranda
+  [145,250,500,74],              // front of the pelaminan
+  [125,300,58,156],              // left approach around the back wall
+  [585,300,62,156],              // right approach around the back wall
+  [315,840,125,288],             // entrance underpass
+  [165,925,150,209],             // left forecourt
+  [585,925,100,209],             // right reception lane
+  [170,1082,515,52],             // open entrance forecourt
+];
+
+/** Keep the guest's feet and shoulders clear of walls; paths and NPCs use the
+ * same footprint, so keyboard, joystick and tap-to-walk agree at every edge.
+ */
+const HALF_W = 9;
+const HALF_H = 5;
+
+/** Solid walls, planters and furniture, in the map's 768 × 1152 coordinates. */
 export const BLOCKERS: readonly [number,number,number,number][] = [
-  [0,0,768,145],
   [210,145,350,100],
-  [0,320,65,620], [704,320,64,620],
-  [190,325,138,100], [432,325,145,100],
-  [220,462,22,35], [514,457,22,35],
-  [185,700,24,42], [540,700,24,42],
-  [86,550,105,65],
-  [605,540,91,141],
-  [40,735,117,133],
+  [183,324,402,116],             // closed back wall and doors
+  [210,850,105,85], [440,850,155,85], // roof wings beside the open passage
+  [0,930,315,107],               // entrance wall left of the doorway
+  [440,930,150,145],             // entrance wall right of the doorway
+  [35,1030,190,57],              // planted hedge in the left forecourt
+  [0,1100,190,52],               // front perimeter planting
+  [249,453,25,38], [485,453,25,38], // upper tree bases
+  [212,795,36,48], [537,795,36,48], // lower tree bases
+  [93,473,64,49],                // left cafe table and chairs
+  [85,540,85,66],                // musical instruments
+  [610,535,99,157],              // buffet table
+  [645,700,70,50],               // right cafe table
+  [35,730,130,147],              // photobooth backdrop and camera
   [440,1000,145,82],
 ];
+
+/** Opaque roof and ivy above the entrance's open floor. */
+export const ENTRY_CANOPY = {
+  x:206,y:846,w:390,h:116,
+  outline:[
+    {x:206,y:919},{x:250,y:861},{x:267,y:846},{x:541,y:849},
+    {x:552,y:862},{x:596,y:921},{x:584,y:949},{x:210,y:949},
+  ] satisfies Vec2[],
+};
 
 /**
  * Where a body may stand. The pathfinder needs these as much as the player
@@ -53,8 +90,16 @@ export function inBounds(x: number, y: number): boolean {
 }
 
 export function blocked(x: number, y: number): boolean {
+  // Sampling the footprint (rather than just its centre) also rejects walking
+  // across the joins of two walls, where one corner used to slip through.
+  for (const dx of [-HALF_W,0,HALF_W]) {
+    for (const dy of [-HALF_H,0,HALF_H]) {
+      const px=x+dx,py=y+dy;
+      if (!WALK_AREAS.some(([rx,ry,rw,rh]) => px>=rx && px<=rx+rw && py>=ry && py<=ry+rh)) return true;
+    }
+  }
   for (const [bx, by, bw, bh] of BLOCKERS) {
-    if (x > bx && x < bx + bw && y > by && y < by + bh) return true;
+    if (x+HALF_W > bx && x-HALF_W < bx+bw && y+HALF_H > by && y-HALF_H < by+bh) return true;
   }
   return false;
 }
