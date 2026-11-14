@@ -75,11 +75,10 @@ function draw(ctx: CanvasRenderingContext2D, r: Run, img: Images, look: Look) {
   const bottom = GROUND - r.lift + 4;
   ctx.save();
   if (r.mode === 'jalan') {
-    // The guest's own outfit, side frames facing left in the art — mirrored to walk right.
+    // The modern guest sheet already faces right, matching the journey's motion.
     const dw = (CELL_W / CELL_H) * drawH;
     const col = r.lift > 0 ? 2 : 2 + (Math.floor(r.t / 140) % 2);
-    ctx.translate(PLAYER_X + dw / 2, bottom - drawH);
-    ctx.scale(-1, 1);
+    ctx.translate(PLAYER_X - dw / 2, bottom - drawH);
     ctx.drawImage(look.sheet, col * CELL_W, (look.base + 1) * CELL_H, CELL_W, CELL_H, 0, 0, dw, drawH);
   } else {
     const v = r.mode === 'motor' ? img.motor : img.car;

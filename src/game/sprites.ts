@@ -10,7 +10,7 @@ export const DRAW_W = Math.round((CELL_W / CELL_H) * DRAW_H);
  * (wanita) of the base sheet, or rows 0-1 of an outfit's own sheet.
  * Row N   — front-facing and back-facing poses
  * Row N+1 — the side walk cycle
- * Side frames face LEFT in the art, so "right" is the same frames mirrored.
+ * Side frames in the modern guest sheet face RIGHT, so only "left" is mirrored.
  */
 interface FrameSet { row: number; cols: number[]; flip: boolean }
 
@@ -18,8 +18,8 @@ export function frameSet(base: number, facing: Facing): FrameSet {
   switch (facing) {
     case 'down':  return { row: base, cols: [0, 1], flip: false };
     case 'up':    return { row: base, cols: [4, 5], flip: false };
-    case 'left':  return { row: base + 1, cols: [2, 3], flip: false };
-    case 'right': return { row: base + 1, cols: [2, 3], flip: true };
+    case 'left':  return { row: base + 1, cols: [2, 3], flip: true };
+    case 'right': return { row: base + 1, cols: [2, 3], flip: false };
   }
 }
 
