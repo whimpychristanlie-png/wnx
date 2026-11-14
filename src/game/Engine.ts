@@ -41,8 +41,8 @@ const HEART = ['.X.X.', 'XXXXX', 'XXXXX', '.XXX.', '..X..'];
  * front, because characters draw over the painting and would cover their faces.
  */
 const COUPLE: Record<Who, { x: number; spot: Vec2; face: Facing }> = {
-  groom: { x: 365, spot: { x: 330, y: 270 }, face: 'right' },
-  bride: { x: 422, spot: { x: 462, y: 270 }, face: 'left' },
+  groom: { x: PELAMINAN.x - 16, spot: { x: 330, y: 270 }, face: 'right' },
+  bride: { x: PELAMINAN.x + 16, spot: { x: 462, y: 270 }, face: 'left' },
 };
 /** From the groom to the bride the guest steps down and round, not across the couple. */
 const DIP: Vec2 = { x: 394, y: 290 };
