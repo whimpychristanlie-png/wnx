@@ -4,6 +4,7 @@ import { add as addWish, isPending, load as loadWishes, PENDING_NOTE, relativeTi
 import { calendarUrl } from '../services/calendar';
 import { audio, haptic } from '../services/audio';
 import type { Wish } from '../game/types';
+import { initPrewed } from './prewed';
 
 const $ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) => r.querySelector<T>(s)!;
 const $$ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) => [...r.querySelectorAll<T>(s)];
@@ -76,7 +77,7 @@ $$('[data-split]').forEach((el) => {
   });
 });
 
-// ---------- Music: the invitation's own track (the game keeps Sabilulungan) ----------
+// ---------- Music: independent from the game's chosen track ----------
 const SONG = wedding.invitationBgm.url;
 const musicBtn = $('#music');
 const credit = $('#credit');
@@ -90,7 +91,15 @@ const syncMusic = () => {
   credit.classList.toggle('show', audio.playing);
   if (audio.playing) creditTimer = window.setTimeout(() => credit.classList.remove('show'), 5000);
 };
+const prewed=initPrewed({
+  onVideoPlay:()=>{audio.pauseForVideo();syncMusic();},
+  onVideoStop:()=>{audio.resumeFromVideo();syncMusic();},
+});
 musicBtn.addEventListener('click', async () => {
+  if(prewed.videoPlaying()) {
+    prewed.pauseVideo();
+    await audio.unlock();await audio.startBgm(SONG);syncMusic();return;
+  }
   if (audio.playing) audio.toggleBgm(SONG); // fades out
   else { await audio.unlock(); await audio.startBgm(SONG); }
   // toggleBgm reports what it asked for; a blocked play() must not show as playing.
@@ -106,7 +115,10 @@ const pageLoaded = document.readyState === 'complete'
   ? Promise.resolve()
   : new Promise<void>((r) => addEventListener('load', () => r(), { once: true }));
 void pageLoaded.then(() => setTimeout(() => { if (!thin && !opened) audio.prepareBgm(SONG); }, 400));
-document.addEventListener('visibilitychange', () => (document.hidden ? audio.pauseForHidden() : audio.resumeFromHidden()));
+document.addEventListener('visibilitychange', () => {
+  if(document.hidden) audio.pauseForHidden();else audio.resumeFromHidden();
+  syncMusic();
+});
 
 // ---------- Open the botanical card and move focus to the invitation ----------
 let opened = false;

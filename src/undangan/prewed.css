@@ -1,0 +1,80 @@
+/* Real prewedding photographs, with the existing ivory and garden palette. */
+.gate.photo-gate { display:flex; align-items:flex-end; justify-content:center; padding:0; background:#18231c; }
+.gate.photo-gate::before { display:none; }
+.photo-gate-image { position:absolute; inset:0; width:100%; height:100%; }
+.photo-gate-image img { width:100%; height:100%; object-fit:cover; object-position:50% 32%; }
+.photo-gate-image::after { content:''; position:absolute; inset:0; background:linear-gradient(transparent 28%,#12211935 45%,#122119e8 100%); }
+.photo-cover-copy { width:100%; max-width:480px; margin:0; padding:220px 26px max(28px,env(safe-area-inset-bottom)); border:0; border-radius:0; background:transparent; box-shadow:none; }
+.photo-cover-copy .cover-leaves,.photo-cover-copy .cover-monogram,.photo-cover-copy .cover-divider,.photo-cover-copy .cover-footer { display:none; }
+.photo-cover-copy .cover-kicker { margin-bottom:14px; font-size:13px; letter-spacing:.22em; color:#f0e7d5; }
+.photo-cover-copy .cover-names { color:#fffdf5; font:italic 400 clamp(35px,9vw,45px)/1.15 var(--f-display); letter-spacing:-.025em; }
+.photo-cover-copy .cover-date { color:#f0e7d5; font-size:14px; margin-top:14px; }
+.photo-cover-copy .cover-to { color:#f1eadb; margin-top:24px; font-size:16px; }
+.photo-cover-copy .cover-to-zh { font-size:14px; line-height:1.6; }
+.photo-cover-copy .cover-guest { color:#fffdf5; margin:10px 0 20px; font-size:24px; }
+.photo-cover-copy .cover-open { background:#faf7f0; color:#243a31; font-size:14px; min-height:52px; }
+.photo-cover-copy .cover-open:hover { background:#ecebdd; }
+.side-img { inset:0; }
+.side-img img { object-position:50% 30%; }
+.side-date { font-size:14px; line-height:1.7; letter-spacing:.15em; }
+.portrait .arch img { object-fit:cover; object-position:center; }
+
+.prewed-film { padding-top:20px; padding-bottom:70px; }
+.prewed-film .h2,.album-section .h2 { font-size:clamp(36px,9vw,46px); line-height:1.12; }
+.media-intro { max-width:30ch; margin:20px auto 28px; font-size:16px; line-height:1.8; }
+.media-intro [lang] { font-size:15px; line-height:1.8; }
+.film-frame { border:1px solid #b6a58680; padding:7px; border-radius:15px; background:#fffdf8; }
+.film-frame video { display:block; width:100%; height:auto; aspect-ratio:16/9; background:#142219; border-radius:9px; }
+.media-note { margin:18px auto 0; font-size:14px; color:#617260; line-height:1.7; }
+.media-note a { text-underline-offset:4px; }
+.photo-interlude { margin:8px 24px 76px; text-align:center; }
+.photo-interlude button { display:block; width:100%; padding:0; overflow:hidden; border-radius:160px 160px 10px 10px; }
+.photo-interlude img { width:100%; height:auto; }
+.photo-interlude figcaption { margin-top:20px; color:#344d40; font:italic 400 24px/1.45 var(--f-display); }
+.photo-interlude figcaption [lang] { display:block; margin-top:8px; color:#617260; font:400 15px/1.8 var(--f-body); }
+.garden-interlude { margin-top:12px; }
+.garden-interlude button { border-radius:12px; }
+
+.album-section { padding-top:32px; padding-bottom:80px; }
+.album-filters { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin:28px 0; }
+.album-filters button { min-height:44px; border:1px solid #bac4b4; border-radius:999px; padding:8px 10px; font-size:14px; line-height:1.5; color:#344d40; }
+.album-filters button[aria-pressed=true] { background:#526b55; color:#fffdf8; border-color:#526b55; }
+.album-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; align-items:start; padding-bottom:24px; }
+.album-tile { display:block; width:100%; padding:0; overflow:hidden; border-radius:6px; box-shadow:0 4px 14px #243a3112; }
+.album-tile:nth-child(even) { transform:translateY(24px); }
+.album-tile img { width:100%; height:auto; transition:transform .4s ease; }
+@media(hover:hover) { .album-tile:hover img { transform:scale(1.035); } }
+.album-open-button { margin-top:24px; font-size:14px; }
+.album-open { overflow:hidden; }
+.photo-viewer { width:100%; max-width:none; height:100%; max-height:none; padding:0; margin:0; color:#faf7f0; background:#142019; border:0; }
+.photo-viewer[open] { display:grid; grid-template-rows:auto minmax(0,1fr) auto; }
+.photo-viewer::backdrop { background:#142019ed; }
+.viewer-header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:max(12px,env(safe-area-inset-top)) 20px 12px; border-bottom:1px solid #e0d4b928; }
+.viewer-header span { font:italic 400 25px/1.3 var(--f-display); }
+.viewer-header button,.viewer-controls button { padding:10px 14px; min-height:44px; border:1px solid #e0d4b95a; border-radius:999px; font-size:14px; color:#faf7f0; }
+.viewer-photo { display:grid; grid-template-rows:minmax(0,1fr) auto; min-height:0; padding:14px 12px 0; gap:12px; text-align:center; }
+.viewer-photo img { width:100%; height:100%; min-height:0; object-fit:contain; user-select:none; touch-action:pan-y pinch-zoom; }
+.viewer-photo figcaption { font-size:14px; line-height:1.6; color:#e4dfd2; }
+.viewer-controls { display:flex; align-items:center; justify-content:center; gap:16px; padding:14px 14px max(16px,env(safe-area-inset-bottom)); }
+.viewer-controls span { min-width:55px; text-align:center; font-size:14px; font-variant-numeric:tabular-nums; }
+
+@media(min-width:960px) {
+  .gate.photo-gate { display:grid; grid-template-columns:minmax(0,1fr) 480px; align-items:stretch; }
+  .photo-gate-image { position:relative; min-height:100dvh; }
+  .photo-gate-image img { position:absolute; inset:0; object-position:50% 30%; }
+  .photo-gate-image::after { background:linear-gradient(transparent 72%,#14201940); }
+  .photo-cover-copy { max-width:none; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:60px 40px; background:#faf7f0; }
+  .photo-cover-copy .cover-kicker,.photo-cover-copy .cover-date,.photo-cover-copy .cover-to { color:#617260; }
+  .photo-cover-copy .cover-names,.photo-cover-copy .cover-guest { color:#243a31; }
+  .photo-cover-copy .cover-open { background:#526b55; color:#fffdf8; max-width:340px; }
+  .photo-cover-copy .cover-open:hover { background:#3f5944; }
+}
+@media(max-height:680px) and (max-width:959px) {
+  .photo-cover-copy { padding-top:160px; padding-bottom:20px; }
+  .photo-cover-copy .cover-to { margin-top:14px; }
+  .photo-cover-copy .cover-date { margin-top:8px; }
+  .photo-cover-copy .cover-kicker { margin-bottom:8px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .album-tile img { transition:none; }
+}

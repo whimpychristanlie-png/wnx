@@ -21,6 +21,8 @@ class AudioManager {
   private bgmBroken = false;
   /** Only the newest fade may write the volume — see fade(). */
   private fadeId = 0;
+  /** A foreground video and a hidden tab can each suspend the same track. */
+  private suspended = new Set<'hidden'|'video'>();
 
   /** True once the browser has actually allowed sound to start. */
   get unlocked(): boolean {
@@ -77,8 +79,10 @@ class AudioManager {
   async startBgm(url: string): Promise<void> {
     this.wanted = true;
     const el = this.element(url);
+    if (this.suspended.size) return;
     try {
       await el.play();
+      if (this.suspended.size) { el.pause(); return; }
       this.startEnvelope();
       this.fade(this.bgmGain, 2000);
     } catch (err) {
@@ -161,8 +165,24 @@ class AudioManager {
     this.fade(on ? 0.18 : this.bgmGain, 300);
   }
 
-  pauseForHidden(): void { if (this.playing) this.bgm?.pause(); }
-  resumeFromHidden(): void { if (this.wanted) void this.bgm?.play().catch(() => undefined); }
+  private suspend(reason:'hidden'|'video'): void {
+    this.suspended.add(reason);
+    this.bgm?.pause();
+  }
+
+  private resume(reason:'hidden'|'video'): void {
+    if (!this.suspended.delete(reason) || this.suspended.size || !this.wanted || !this.bgm) return;
+    void this.bgm.play().then(()=>{
+      if(this.suspended.size) {this.bgm?.pause();return;}
+      this.startEnvelope();
+      if(this.targetGain===0) this.fade(this.bgmGain,400);
+    }).catch(()=>undefined);
+  }
+
+  pauseForHidden(): void { this.suspend('hidden'); }
+  resumeFromHidden(): void { this.resume('hidden'); }
+  pauseForVideo(): void { this.suspend('video'); }
+  resumeFromVideo(): void { this.resume('video'); }
 
   play(name: Sfx): void {
     if (reduced()) return;

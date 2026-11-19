@@ -12,13 +12,13 @@
   <meta property="og:title" content="Undangan Pernikahan · 婚礼邀请 {{couple.groom.name}} &amp; {{couple.bride.name}}" />
   <meta property="og:description" content="{{events.akad.displayDate}} · {{location.name}}, {{location.city}}." />
   <meta property="og:url" content="%VITE_SITE_URL%/undangan/" />
-  <meta property="og:image" content="%VITE_SITE_URL%/assets/couple-whimpy-xinxin.png" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
+  <meta property="og:image" content="%VITE_SITE_URL%/assets/prewed/portrait.jpg" />
+  <meta property="og:image:width" content="1365" />
+  <meta property="og:image:height" content="2048" />
   <meta property="og:locale" content="id_ID" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Undangan Pernikahan · 婚礼邀请 {{couple.groom.name}} &amp; {{couple.bride.name}}" />
-  <meta name="twitter:image" content="%VITE_SITE_URL%/assets/couple-whimpy-xinxin.png" />
+  <meta name="twitter:image" content="%VITE_SITE_URL%/assets/prewed/portrait.jpg" />
 
   <link rel="icon" href="/assets/icons/nav_pasangan.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -26,12 +26,15 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&family=Marcellus&family=Playfair+Display:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" />
   <link rel="stylesheet" href="/src/undangan/style.css" />
   <link rel="stylesheet" href="/src/styles/cover.css" />
+  <link rel="stylesheet" href="/src/undangan/prewed.css" />
+  <link rel="preload" as="image" href="/assets/prewed/cover.jpg" fetchpriority="high" />
 </head>
 <body>
 
 <!-- ====================== GATE ====================== -->
-<section class="gate opening-screen" id="gate" aria-label="Sampul undangan · 婚礼邀请">
-  <div class="invitation-cover">
+<section class="gate opening-screen photo-gate" id="gate" aria-label="Sampul undangan · 婚礼邀请">
+  <div class="photo-gate-image"><img src="/assets/prewed/cover.jpg" alt="Whimpy dan Xinxin duduk bersama di gereja" width="1152" height="2048" fetchpriority="high" /></div>
+  <div class="invitation-cover photo-cover-copy">
 <span class="cover-leaves top" aria-hidden="true"><svg viewBox="0 0 100 115" fill="none"><path d="M9 105Q20 40 85 9" stroke="#829175"/><g fill="#a3b092"><ellipse cx="17" cy="83" rx="6" ry="16" transform="rotate(-26 17 83)"/><ellipse cx="34" cy="67" rx="7" ry="17" transform="rotate(44 34 67)"/><ellipse cx="66" cy="32" rx="6" ry="16" transform="rotate(49 66 32)"/></g><g fill="#fffef9" stroke="#c9c6ab"><circle cx="27" cy="46" r="7"/><circle cx="74" cy="14" r="6"/></g></svg></span><span class="cover-leaves bottom" aria-hidden="true"><svg viewBox="0 0 100 115" fill="none"><path d="M9 105Q20 40 85 9" stroke="#829175"/><g fill="#a3b092"><ellipse cx="17" cy="83" rx="6" ry="16" transform="rotate(-26 17 83)"/><ellipse cx="34" cy="67" rx="7" ry="17" transform="rotate(44 34 67)"/><ellipse cx="66" cy="32" rx="6" ry="16" transform="rotate(49 66 32)"/></g><g fill="#fffef9" stroke="#c9c6ab"><circle cx="27" cy="46" r="7"/><circle cx="74" cy="14" r="6"/></g></svg></span>
     <p class="cover-kicker">THE WEDDING OF</p>
     <p class="cover-monogram" aria-hidden="true">W &amp; X</p>
@@ -40,7 +43,7 @@
     <hr class="cover-divider"/>
     <p class="cover-to">Kepada tamu terhormat<span lang="zh-Hans" class="cover-to-zh">致亲爱的来宾</span></p>
     <p class="cover-guest" id="guest">Tamu Undangan</p>
-    <button type="button" class="cover-open" id="openBtn">Buka Undangan · 开启邀请 <span aria-hidden="true">→</span></button>
+    <button type="button" class="cover-open" id="openBtn">Buka Undangan · 开启邀请</button>
     <p class="cover-footer">20 · 12 · 2026</p>
   </div>
 </section>
@@ -56,7 +59,7 @@
 <div class="layout" inert>
   <!-- Desktop-only sticky panel -->
   <aside class="side" aria-hidden="true">
-    <div class="side-img depth" style="--z:-14"><img src="/assets/rumah30/courtyard.png" alt="" loading="lazy" decoding="async" /></div>
+    <div class="side-img depth" style="--z:-14"><img src="/assets/prewed/cover.jpg" alt="" decoding="async" width="1152" height="2048" /></div>
     <div class="side-copy">
       <p class="eyebrow">Undangan Pernikahan · 婚礼邀请</p>
       <p class="side-names">{{couple.groom.name}} <span class="amp">&amp;</span> {{couple.bride.name}}</p>
@@ -76,7 +79,7 @@
       <div class="date rv" style="--d:1200ms" data-hero-date></div>
 
       <div class="portrait rv" style="--d:1300ms">
-        <div class="arch"><img src="/assets/couple-whimpy-xinxin.png" alt="Ilustrasi {{couple.groom.name}} dan {{couple.bride.name}} dalam busana pengantin" /></div>
+        <div class="arch"><img src="/assets/prewed/portrait.jpg" alt="Foto prewedding {{couple.groom.name}} dan {{couple.bride.name}} di tangga gereja" width="1365" height="2048" decoding="async" /></div>
       </div>
 
       <div class="countdown rv" style="--d:300ms" aria-label="Hitung mundur menuju pemberkatan · 婚礼倒计时">
@@ -86,6 +89,21 @@
         <div><b id="cdS">--</b><span>Detik 秒</span></div>
       </div>
       <p class="cue rv" style="--d:500ms">Gulir<i></i></p>
+    </section>
+
+    <!-- ====================== FILM ====================== -->
+    <section class="sec prewed-film" id="film" aria-labelledby="filmTitle">
+      <p class="eyebrow rv">SEPOTONG CERITA KITA · 我们的影像</p>
+      <h2 class="h2 rv" id="filmTitle">Bersamamu</h2>
+      <p class="media-intro rv">Satu perjalanan, berdua.<br/><span lang="zh-Hans">与你一起，走过每一段风景。</span></p>
+      <div class="film-frame rv">
+        <video id="prewedVideo" controls playsinline preload="none" poster="/assets/prewed/film-poster.jpg" width="1280" height="720" aria-label="Video prewedding Whimpy dan Xinxin">
+          <source src="/assets/prewed/prewed-film.mp4" type="video/mp4" />
+          <a href="/assets/prewed/prewed-film.mp4">Buka video · 观看视频</a>
+        </video>
+      </div>
+      <p class="media-note rv">Putar untuk menonton · 点击播放</p>
+      <p id="videoFallback" class="media-note" hidden>Video belum bisa diputar. <a href="/assets/prewed/prewed-film.mp4" target="_blank" rel="noopener">Buka video · 观看视频</a></p>
     </section>
 
     <!-- ====================== AYAT ====================== -->
@@ -129,6 +147,13 @@
       </div>
     </section>
 
+    <figure class="photo-interlude">
+      <button type="button" data-prewed-photo="prayer" aria-label="Perbesar foto doa bersama">
+        <img src="/assets/prewed/prayer.jpg" alt="Whimpy dan Xinxin berdoa bersama di gereja" width="1365" height="2048" loading="lazy" decoding="async" />
+      </button>
+      <figcaption>Dalam doa yang sama.<span lang="zh-Hans">同心祈祷，相伴前行。</span></figcaption>
+    </figure>
+
     <!-- ====================== ACARA ====================== -->
     <section class="sec tight" id="acara">
       <p class="eyebrow rv">Waktu &amp; Tempat · 时间与地点</p>
@@ -171,6 +196,22 @@
       <p class="dress-note">Warna di atas merupakan saran, bukan kewajiban.<br/><span lang="zh-Hans">以上颜色仅供参考，不作强制要求。</span></p>
     </section>
 
+    <!-- ====================== ALBUM ====================== -->
+    <section class="sec album-section" id="album" aria-labelledby="albumTitle">
+      <p class="eyebrow rv">KENANGAN KITA · 我们的相册</p>
+      <h2 class="h2 rv" id="albumTitle">Setiap versi kita</h2>
+      <p class="media-intro rv">Ada banyak cara untuk berkata: aku memilihmu.<br/><span lang="zh-Hans">每一种模样，都是我爱的你。</span></p>
+      <div class="album-filters" role="group" aria-label="Pilih suasana foto">
+        <button type="button" data-album-filter="Semua" aria-pressed="true">Semua · 全部</button>
+        <button type="button" data-album-filter="Gereja" aria-pressed="false">Gereja · 教堂</button>
+        <button type="button" data-album-filter="Klasik" aria-pressed="false">Klasik · 经典</button>
+        <button type="button" data-album-filter="Taman" aria-pressed="false">Taman · 庭院</button>
+      </div>
+      <div id="albumGrid" class="album-grid"></div>
+      <p class="media-note">Sentuh foto untuk memperbesar · 点击照片查看大图</p>
+      <button type="button" class="btn btn-primary album-open-button" id="openAlbum">Buka album · 查看相册</button>
+    </section>
+
     <!-- ====================== ADVENTURE OF US ====================== -->
     <section class="sec tight" id="adventure">
       <article class="event quest rv">
@@ -187,6 +228,13 @@
         <img class="divider ink-on-paper" src="/src/undangan/img/divider.webp" alt="" loading="lazy" decoding="async" />
       </article>
     </section>
+
+    <figure class="photo-interlude garden-interlude">
+      <button type="button" data-prewed-photo="garden" aria-label="Perbesar foto di taman">
+        <img src="/assets/prewed/garden.jpg" alt="Whimpy dan Xinxin di taman dengan busana tradisional" width="1365" height="2048" loading="lazy" decoding="async" />
+      </button>
+      <figcaption>Di setiap musim, bersamamu.<span lang="zh-Hans">四季流转，与你相伴。</span></figcaption>
+    </figure>
 
     <!-- ====================== UCAPAN & RSVP ====================== -->
     <section class="sec tight" id="rsvp">
@@ -260,6 +308,12 @@
     </footer>
   </main>
 </div>
+
+<dialog id="photoViewer" class="photo-viewer" aria-label="Album Whimpy dan Xinxin">
+  <div class="viewer-header"><span>Whimpy &amp; Xinxin</span><button id="viewerClose" type="button">Tutup · 关闭</button></div>
+  <figure class="viewer-photo"><img id="viewerImage" alt="" draggable="false" /><figcaption id="viewerCaption"></figcaption></figure>
+  <div class="viewer-controls"><button id="viewerPrev" type="button" aria-label="Foto sebelumnya">Sebelumnya</button><span id="viewerCount" aria-live="polite"></span><button id="viewerNext" type="button" aria-label="Foto berikutnya">Berikutnya</button></div>
+</dialog>
 
 <button class="music" id="music" aria-label="Putar atau jeda musik" aria-pressed="false">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="2.2" /><path d="M12 5.5A6.5 6.5 0 0 1 18.5 12" /></svg>
