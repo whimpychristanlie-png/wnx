@@ -493,3 +493,14 @@ body:not(.opened) .music { opacity: 0; pointer-events: none; scale: .6; }
 .portrait { aspect-ratio:2/3; }
 .portrait::before,.arch { border-radius:18px; }
 .arch img { top:0; height:100%; object-position:center top; scale:1; }
+
+/* Indonesian leads; Mandarin is a readable subtitle on its own line. */
+.bilingual-title .title-id,.bilingual-title .title-zh { display:block; }
+.h2 { font-size:clamp(36px,10vw,46px); line-height:1.15; }
+.h2 .title-zh { margin-top:12px; color:var(--muted); font:400 18px/1.65 "PingFang SC","Microsoft YaHei",sans-serif; letter-spacing:.06em; }
+.ev-title { font-size:clamp(28px,8vw,36px); line-height:1.2; }
+.ev-title .title-zh { margin-top:10px; color:var(--muted); font:400 17px/1.7 "PingFang SC","Microsoft YaHei",sans-serif; letter-spacing:.04em; }
+.eyebrow .title-zh { margin-top:5px; font:400 14px/1.7 "PingFang SC","Microsoft YaHei",sans-serif; letter-spacing:.08em; text-transform:none; }
+.ev-date { margin-top:18px; font-size:14px; line-height:1.7; }
+.ev-time { margin-top:12px; font-size:clamp(23px,6.5vw,27px); white-space:nowrap; }
+@media(max-width:359px) { .ev-time { font-size:20px; } }

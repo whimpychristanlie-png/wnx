@@ -28,6 +28,20 @@ $$('[data-w]').forEach((el) => {
   el.textContent = el.hasAttribute('data-quote') ? `“${text}”` : text;
 });
 
+// Keep each heading and its translation on separate lines. Config-backed event
+// names and dates go through the same rendering as the static section titles.
+$$('.h2, .ev-title, .eyebrow').forEach((el) => {
+  const [primary, ...translation] = (el.textContent ?? '').trim().split('·');
+  const chinese = translation.join('·').trim();
+  if (!/[\u3400-\u9fff]/.test(chinese)) return;
+  const id = h('span', 'title-id', primary.trim());
+  id.lang = 'id';
+  const zh = h('span', 'title-zh', chinese);
+  zh.lang = 'zh-Hans';
+  el.classList.add('bilingual-title');
+  el.replaceChildren(id, zh);
+});
+
 const IG_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r=".6" fill="currentColor"/></svg>';
 $$<HTMLAnchorElement>('[data-ig]').forEach((a) => {
   const handle = pick(a.dataset.ig!);

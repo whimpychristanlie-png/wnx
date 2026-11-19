@@ -17,7 +17,7 @@ export const PREWED_PHOTOS: PrewedPhoto[] = [
   photo('cover','Di bangku gereja · 教堂里的我们','Gereja',1152),
   photo('portrait','Bersamamu di setiap langkah · 与你并肩','Gereja'),
   photo('aisle','Satu langkah menuju selamanya · 走向我们的未来','Gereja'),
-  photo('prayer','Dalam doa yang sama · 同心祈祷','Gereja'),
+  photo('prayer','Doa untuk bahtera kita · 为我们的婚姻祈祷','Gereja'),
   photo('vows','Janji kita · 我们的约定','Gereja'),
   photo('kiss','Sebuah kecupan · 轻轻一吻','Klasik'),
   photo('sunglasses','Tawa kecil kita · 我们的小欢喜','Klasik'),
