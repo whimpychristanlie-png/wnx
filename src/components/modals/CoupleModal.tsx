@@ -27,7 +27,7 @@ export default function CoupleModal({assets:_assets,moment,onPhoto,onClose}:{ass
       <button type="button" onClick={onClose} className="btn-ghost mt-2 w-full">Lanjut Jelajah · 继续探索</button>
     </section>}
     <div className="mb-6 overflow-hidden rounded-xl border border-wood-400 bg-parchment-100">
-      <img src="/assets/couple-whimpy-xinxin.png" alt="Ilustrasi Whimpy dan Xinxin · 新人插画" className="aspect-[4/5] w-full object-cover object-top"/>
+      <img src="/assets/prewed/portrait.jpg" alt="Foto prewedding Whimpy dan Xinxin di tangga gereja · Whimpy与欣欣的婚纱照" width={1365} height={2048} decoding="async" className="h-auto w-full"/>
       <div className="px-4 py-5 text-center"><p className="label-cap">20 DESEMBER 2026 · RUMAH 30</p><h3 className="mt-2 font-display text-[27px] text-ink-900">{coupleNames}</h3></div>
     </div>
     <div className="grid gap-4"><PersonCard p={wedding.couple.groom} groom/><PersonCard p={wedding.couple.bride} groom={false}/></div>
