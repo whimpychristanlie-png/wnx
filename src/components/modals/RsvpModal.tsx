@@ -165,7 +165,7 @@ export default function RsvpModal({ wishes, defaultName, gender, onSubmit, onClo
 
         <div className="grid gap-2">
           <button type="button" onClick={() => void submit()} disabled={sending} className="btn-primary w-full">
-            {sending ? 'Mengirim · 发送中…' : 'Kirim · 提交回复与祝福'}
+            {sending ? 'Mengirim · 发送中…' : 'Kirim · 提交'}
           </button>
           {/* Sending is the consent to both, so it is said before, not after. */}
           <p className="m-0 text-[11px] leading-4 text-ink-muted">
