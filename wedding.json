@@ -29,17 +29,17 @@
   },
   "events": {
     "akad": {
-      "title": "Pemberkatan · 婚礼祝福仪式",
+      "title": "Pemberkatan · 教堂仪式",
       "date": "2026-12-20",
       "displayDate": "Minggu, 20 Desember 2026 · 2026年12月20日 星期日",
-      "time": "15.00–16.00 WIB",
+      "time": "14.00–15.00 WIB",
       "venue": "Rumah 30",
       "address": "Jl. Batu Tulis No.30, RT.03/RW.03, Batutulis, Kec. Bogor Sel., Kota Bogor, Jawa Barat 16133",
       "mapsUrl": "https://maps.app.goo.gl/GMGhsgLDUdM2oPkk7",
       "dresscode": "Garden Semi-Formal · 花园半正式着装 | Beige 米色 · Taupe 灰褐色 · Mocha 摩卡色 · Sage 鼠尾草绿"
     },
     "resepsi": {
-      "title": "Resepsi Pernikahan · 婚宴",
+      "title": "Resepsi Pernikahan · 正式婚宴",
       "date": "2026-12-20",
       "displayDate": "Minggu, 20 Desember 2026 · 2026年12月20日 星期日",
       "time": "17:00 - 20:00 WIB",
@@ -51,9 +51,9 @@
   },
   "ceremonyStart": "2026-12-20T15:00:00+07:00",
   "quote": {
-    "arabic": "在这一切之外，要存着爱心，爱心就是联络全德的。",
+    "arabic": "最重要的是，要以爱为纽带，因为爱能使一切合而为一，达到完全。",
     "translation": "Dan di atas semuanya itu: kenakanlah kasih, sebagai pengikat yang mempersatukan dan menyempurnakan.",
-    "source": "Kolose 3:14 (TB) · 歌罗西书 3:14（和合本）"
+    "source": "Kolose 3:14 (TB) · 歌罗西书 3:14"
   },
   "blessing": {
     "text": "Terima kasih telah menjadi bagian dari hari bahagia kami.",
