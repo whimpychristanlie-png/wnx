@@ -11,6 +11,22 @@ function EventCard({e}:{e:WeddingEvent}) {
       <h3 className="font-display text-[25px] leading-8 text-ink-900"><span className="block">{titleId}</span><span lang="zh-Hans" className="mt-2 block font-body text-[14px] font-normal leading-6 text-ink-600">{titleZh.join(' · ')}</span></h3>
       <p className="mb-1 mt-4 font-display text-[27px] leading-10 text-ink-900">{e.time.replace(/:/g,'.')}</p>
       <p className="mt-4 text-[13px] leading-6 text-ink-900">Minggu, 20 Desember 2026<br/><span lang="zh-Hans" className="text-ink-600">2026年12月20日 · 星期日</span></p>
+      {e === wedding.events.resepsi && (
+    <div className="mt-5 border-t border-wood-400 pt-5">
+    <h3 className="font-display text-[25px] leading-8 text-ink-900">
+      After Party
+    </h3>
+    <p
+      lang="zh-Hans"
+      className="mt-2 font-body text-[14px] leading-6 text-ink-600"
+    >
+      婚礼派对
+    </p>
+    <p className="mt-3 font-display text-[27px] leading-10 text-ink-900">
+      19.00–20.00 WIB
+    </p>
+  </div>
+)}
       <hr className="my-4 border-0 border-t border-wood-400"/>
       <h3 className="font-display text-[22px] text-ink-900">{e.venue}</h3><p className="mt-2 text-[12px] leading-6 text-ink-600">{e.address}</p>
       <div className="mt-5 grid grid-cols-2 gap-2">
