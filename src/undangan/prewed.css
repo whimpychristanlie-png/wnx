@@ -15,7 +15,7 @@
 .photo-cover-copy .cover-open { background:#faf7f0; color:#243a31; font-size:14px; min-height:52px; }
 .photo-cover-copy .cover-open:hover { background:#ecebdd; }
 .side-img { inset:0; }
-.side-img img { object-position:50% 30%; }
+.side-img img { object-position:50% 100%; transform-origin:50% 100%; }
 .side-date { font-size:14px; line-height:1.7; letter-spacing:.15em; }
 .portrait .arch img { object-fit:cover; object-position:center; }
 
