@@ -213,12 +213,6 @@
       <p class="eyebrow rv">KENANGAN KITA · 我们的相册</p>
       <h2 class="h2 rv" id="albumTitle">Setiap versi kita · 每一种模样的我们</h2>
       <p class="media-intro rv">Ada banyak cara untuk berkata: aku memilihmu.<br/><span lang="zh-Hans">每一种模样，都是我爱的你。</span></p>
-      <div class="album-filters" role="group" aria-label="Pilih suasana foto">
-        <button type="button" data-album-filter="Semua" aria-pressed="true">Semua · 全部</button>
-        <button type="button" data-album-filter="Gereja" aria-pressed="false">Gereja · 教堂</button>
-        <button type="button" data-album-filter="Klasik" aria-pressed="false">Klasik · 经典</button>
-        <button type="button" data-album-filter="Taman" aria-pressed="false">Taman · 庭院</button>
-      </div>
       <div id="albumGrid" class="album-grid"></div>
       <p class="media-note">Sentuh foto untuk memperbesar · 点击照片查看大图</p>
       <button type="button" class="btn btn-primary album-open-button" id="openAlbum">Buka album · 查看相册</button>
@@ -323,8 +317,8 @@
 
 <dialog id="photoViewer" class="photo-viewer" aria-label="Album Whimpy dan Xinxin">
   <div class="viewer-header"><span>Whimpy &amp; Xinxin</span><button id="viewerClose" type="button">Tutup · 关闭</button></div>
-  <figure class="viewer-photo"><img id="viewerImage" alt="" draggable="false" /><figcaption id="viewerCaption"></figcaption></figure>
   <div class="viewer-controls"><button id="viewerPrev" type="button" aria-label="Foto sebelumnya">Sebelumnya</button><span id="viewerCount" aria-live="polite"></span><button id="viewerNext" type="button" aria-label="Foto berikutnya">Berikutnya</button></div>
+  <figure class="viewer-photo"><img id="viewerImage" alt="" draggable="false" /></figure>
 </dialog>
 
 <button class="music" id="music" aria-label="Putar atau jeda musik" aria-pressed="false">

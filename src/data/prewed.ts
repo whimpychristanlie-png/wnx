@@ -1,33 +1,39 @@
-export type PhotoCategory = 'Gereja' | 'Klasik' | 'Taman';
 export interface PrewedPhoto {
   id: string;
   src: string;
   alt: string;
-  category: PhotoCategory;
   width: number;
   height: number;
 }
 
-const photo = (id:string,alt:string,category:PhotoCategory,width=1365):PrewedPhoto => ({
-  id,src:`/assets/prewed/${id}.jpg`,alt,category,width,height:2048,
+const photo = (id:string,alt:string,width=1365,height=2048):PrewedPhoto => ({
+  id,src:`/assets/prewed/${id}.jpg`,alt,width,height,
 });
 
 /** Original photographs, in album order. Cover and portrait keep their own roles. */
 export const PREWED_PHOTOS: PrewedPhoto[] = [
-  photo('cover','Di bangku gereja · 教堂里的我们','Gereja',1152),
-  photo('portrait','Bersamamu di setiap langkah · 与你并肩','Gereja'),
-  photo('aisle','Satu langkah menuju selamanya · 走向我们的未来','Gereja'),
-  photo('prayer','Doa untuk bahtera kita · 为我们的婚姻祈祷','Gereja'),
-  photo('vows','Janji kita · 我们的约定','Gereja'),
-  photo('kiss','Sebuah kecupan · 轻轻一吻','Klasik'),
-  photo('sunglasses','Tawa kecil kita · 我们的小欢喜','Klasik'),
-  photo('newspaper','Kabar bahagia · 我们的喜讯','Klasik'),
-  photo('archway','Di ambang cerita baru · 新篇章的起点','Klasik'),
-  photo('together','Dekat denganmu · 靠近你','Klasik'),
-  photo('courtyard','Di halaman yang tenang · 静静的庭院','Taman'),
-  photo('red-dress','Hanya kamu · 眼中只有你','Taman'),
-  photo('garden','Kita dan musim yang indah · 我们与美好时光','Taman'),
-  photo('autumn','Hangatnya kebersamaan · 相伴的温暖','Taman'),
+  photo('cover','Di bangku gereja · 教堂里的我们',1152),
+  photo('portrait','Bersamamu di setiap langkah · 与你并肩'),
+  photo('aisle','Satu langkah menuju selamanya · 走向我们的未来'),
+  photo('prayer','Doa untuk bahtera kita · 为我们的婚姻祈祷'),
+  photo('vows','Janji kita · 我们的约定'),
+  photo('kiss','Sebuah kecupan · 轻轻一吻'),
+  photo('sunglasses','Tawa kecil kita · 我们的小欢喜'),
+  photo('newspaper','Kabar bahagia · 我们的喜讯'),
+  photo('courtyard','Di halaman yang tenang · 静静的庭院'),
+  photo('red-dress','Hanya kamu · 眼中只有你'),
+  photo('garden','Kita dan musim yang indah · 我们与美好时光'),
+  photo('autumn','Hangatnya kebersamaan · 相伴的温暖'),
+  photo('album-nov-1','Foto prewedding Whimpy dan Xinxin 1',1800,1200),
+  photo('album-nov-2','Foto prewedding Whimpy dan Xinxin 2',1200,1800),
+  photo('album-nov-3','Foto prewedding Whimpy dan Xinxin 3',1200,1800),
+  photo('album-nov-4','Foto prewedding Whimpy dan Xinxin 4',1200,1800),
+  photo('album-nov-5','Foto prewedding Whimpy dan Xinxin 5',1200,1800),
+  photo('album-nov-6','Foto prewedding Whimpy dan Xinxin 6',1800,1200),
+  photo('album-nov-7','Foto prewedding Whimpy dan Xinxin 7',1135,1800),
+  photo('album-nov-8','Foto prewedding Whimpy dan Xinxin 8',1200,1800),
+  photo('album-nov-9','Foto prewedding Whimpy dan Xinxin 9',1800,1200),
+  photo('album-nov-10','Foto prewedding Whimpy dan Xinxin 10',1800,1200),
+  photo('album-nov-11','Foto prewedding Whimpy dan Xinxin 11',1800,1200),
+  photo('album-nov-12','Foto prewedding Whimpy dan Xinxin 12',1200,1800),
 ];
-
-export const PREWED_HIGHLIGHTS = ['aisle','autumn','kiss','prayer','red-dress','newspaper'];

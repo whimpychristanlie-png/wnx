@@ -1,4 +1,4 @@
-import { PREWED_HIGHLIGHTS, PREWED_PHOTOS, type PhotoCategory, type PrewedPhoto } from '../data/prewed';
+import { PREWED_PHOTOS, type PrewedPhoto } from '../data/prewed';
 
 /** Album images are attached only as needed. The native dialog handles focus
  * trapping, Escape and returning keyboard focus to the control that opened it.
@@ -7,17 +7,13 @@ export function initPrewed(hooks:{onVideoPlay:()=>void;onVideoStop:()=>void}) {
   const grid=document.querySelector<HTMLElement>('#albumGrid')!;
   const dialog=document.querySelector<HTMLDialogElement>('#photoViewer')!;
   const viewerImage=document.querySelector<HTMLImageElement>('#viewerImage')!;
-  const viewerCaption=document.querySelector<HTMLElement>('#viewerCaption')!;
   const viewerCount=document.querySelector<HTMLElement>('#viewerCount')!;
   const allButton=document.querySelector<HTMLButtonElement>('#openAlbum')!;
   const video=document.querySelector<HTMLVideoElement>('#prewedVideo')!;
-  const filters=[...document.querySelectorAll<HTMLButtonElement>('[data-album-filter]')];
-  let category:PhotoCategory|'Semua'='Semua';
-  let collection=PREWED_PHOTOS;
+  const collection=PREWED_PHOTOS;
   let current=0;
   let opener:HTMLElement|null=null;
 
-  const selected=()=>category==='Semua' ? PREWED_PHOTOS : PREWED_PHOTOS.filter(p=>p.category===category);
   const show=(index:number)=>{
     current=(index+collection.length)%collection.length;
     const photo=collection[current];
@@ -25,13 +21,11 @@ export function initPrewed(hooks:{onVideoPlay:()=>void;onVideoStop:()=>void}) {
     viewerImage.alt=photo.alt;
     viewerImage.width=photo.width;
     viewerImage.height=photo.height;
-    viewerCaption.textContent=photo.alt;
     viewerCount.textContent=`${current+1} / ${collection.length}`;
     // One adjacent image, rather than downloading an entire hidden album.
     if(collection.length>1) { const next=new Image();next.src=collection[(current+1)%collection.length].src; }
   };
   const open=(id?:string)=>{
-    collection=selected();
     opener=document.activeElement instanceof HTMLElement ? document.activeElement : null;
     show(Math.max(0,collection.findIndex(p=>p.id===id)));
     dialog.showModal();
@@ -48,16 +42,8 @@ export function initPrewed(hooks:{onVideoPlay:()=>void;onVideoStop:()=>void}) {
     button.addEventListener('click',()=>open(photo.id));
     return button;
   };
-  const render=()=>{
-    const photos=selected();
-    const highlights=category==='Semua' ? PREWED_HIGHLIGHTS.map(id=>photos.find(p=>p.id===id)!) : photos;
-    grid.replaceChildren(...highlights.map(tile));
-    allButton.textContent=`Buka ${photos.length} foto · 查看相册`;
-    filters.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.albumFilter===category)));
-  };
-  filters.forEach(button=>button.addEventListener('click',()=>{
-    category=button.dataset.albumFilter as typeof category;render();
-  }));
+  grid.replaceChildren(...collection.map(tile));
+  allButton.textContent=`Buka ${collection.length} foto · 查看相册`;
   allButton.addEventListener('click',()=>open());
   document.querySelector('#viewerClose')!.addEventListener('click',()=>dialog.close());
   document.querySelector('#viewerPrev')!.addEventListener('click',()=>show(current-1));
@@ -81,7 +67,7 @@ export function initPrewed(hooks:{onVideoPlay:()=>void;onVideoStop:()=>void}) {
   viewerImage.addEventListener('pointercancel',()=>{start=null;});
   document.querySelectorAll<HTMLElement>('[data-prewed-photo]').forEach(button=>{
     button.addEventListener('click',()=>{
-      category='Semua';render();open(button.dataset.prewedPhoto);
+      open(button.dataset.prewedPhoto);
     });
   });
   video.addEventListener('play',hooks.onVideoPlay);
@@ -91,6 +77,5 @@ export function initPrewed(hooks:{onVideoPlay:()=>void;onVideoStop:()=>void}) {
     document.querySelector<HTMLElement>('#videoFallback')!.hidden=false;
     hooks.onVideoStop();
   });
-  render();
   return {pauseVideo:()=>video.pause(),videoPlaying:()=>!video.paused&&!video.ended};
 }
