@@ -323,6 +323,11 @@ a { color: inherit; touch-action: manipulation; }
 .ev-dress span { color: var(--ink); }
 .actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 24px; }
 
+.event-livestream { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line); }
+.event-livestream-poster { display: block; width: min(300px, 100%); margin: 0 auto; }
+.event-livestream-poster img { width: 100%; height: auto; }
+.event-livestream .actions { margin-top: 18px; }
+
 .quest { padding-top: 54px; }
 .star8 { width: 58px; height: 58px; margin: 0 auto 18px; display: block; overflow: visible; }
 .star8 * { fill: none; stroke: var(--gold); stroke-width: 1.2; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.8s var(--ease-io); }
