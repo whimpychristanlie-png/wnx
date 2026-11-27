@@ -41,10 +41,9 @@
 .album-filters { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin:28px 0; }
 .album-filters button { min-height:44px; border:1px solid #bac4b4; border-radius:999px; padding:8px 10px; font-size:14px; line-height:1.5; color:#344d40; }
 .album-filters button[aria-pressed=true] { background:#526b55; color:#fffdf8; border-color:#526b55; }
-.album-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; align-items:start; padding-bottom:24px; }
+.album-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
 .album-tile { display:block; width:100%; padding:0; overflow:hidden; border-radius:6px; box-shadow:0 4px 14px #243a3112; }
-.album-tile:nth-child(even) { transform:translateY(24px); }
-.album-tile img { width:100%; height:auto; transition:transform .4s ease; }
+.album-tile img { display:block; width:100%; height:auto; aspect-ratio:1; object-fit:cover; transition:transform .4s ease; }
 @media(hover:hover) { .album-tile:hover img { transform:scale(1.035); } }
 .album-open-button { margin-top:24px; font-size:14px; }
 .album-open { overflow:hidden; }
