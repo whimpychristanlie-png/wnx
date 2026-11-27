@@ -509,3 +509,10 @@ body:not(.opened) .music { opacity: 0; pointer-events: none; scale: .6; }
 .ev-date { margin-top:18px; font-size:14px; line-height:1.7; }
 .ev-time { margin-top:12px; font-size:clamp(23px,6.5vw,27px); white-space:nowrap; }
 @media(max-width:359px) { .ev-time { font-size:20px; } }
+
+/* Reception arrival takes priority over the optional gathering afterwards. */
+.ev-arrival { max-width:34em; margin:18px auto 0; padding:14px 16px; border:1px solid #c6cbb8; border-radius:12px; background:#eef1e8; color:#344d40; font:400 14px/1.8 var(--f-body); }
+.ev-arrival strong { font-weight:600; }
+.ev-afterparty .ev-title { font-size:clamp(21px,5.5vw,25px); }
+.ev-afterparty .ev-time { font-size:clamp(18px,5vw,21px); }
+.ev-afterparty-note { max-width:30em; margin:12px auto 0; color:var(--ink); font:400 13px/1.8 var(--f-body); }
