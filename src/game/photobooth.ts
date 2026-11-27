@@ -85,7 +85,6 @@ const ANCHORS: Record<Gender, { cx: number; headTop: number; eyeY: number; mouth
   wanita: { cx: 78, headTop: 33, eyeY: 72, mouthY: 84, neckY: 95, handY: 152, feetY: 211 },
 };
 
-const HEART = ['.X.X.', 'XXXXX', 'XXXXX', '.XXX.', '..X..'];
 
 const ready = (img: HTMLImageElement | null): img is HTMLImageElement => !!img && img.complete && img.naturalWidth > 0;
 
@@ -146,12 +145,52 @@ export function renderScene(ctx: CanvasRenderingContext2D, s: Scene): void {
   if (s.pose === 'funny') {
     // Leaning off one foot, the whole body and its prop together.
     ctx.translate(guestX, FLOOR);
-    ctx.rotate(-0.16);
-    ctx.translate(-guestX, -FLOOR - 24);
+    ctx.rotate(s.body === 'pria' ? 0.035 : -0.035);
+    ctx.translate(-guestX, -FLOOR);
   }
 
   ctx.imageSmoothingEnabled = false;
+  const raised = s.pose !== 'formal';
+  const male = s.body === 'pria';
+  const elbowX = male ? 50 : 51;
+  const elbowY = male ? 126 : 127;
+  ctx.save();
+  if (raised) {
+    // Remove the resting forearm while preserving the torso and dress.
+    ctx.beginPath();
+    ctx.rect(X(0), Y(0), CELL_W*K, CELL_H*K);
+    ctx.rect(X(30), Y(elbowY), (male ? 26 : 25)*K, 31*K);
+    ctx.clip('evenodd');
+  }
   ctx.drawImage(s.look.sheet, 0, s.look.base * CELL_H, CELL_W, CELL_H, X(0), Y(0), CELL_W * K, CELL_H * K);
+  ctx.restore();
+  if (raised) {
+    ctx.save();
+    ctx.translate(X(elbowX), Y(elbowY));
+    ctx.scale(K,K);
+    ctx.lineCap = 'round';
+    const stroke = (x:number,y:number,u:number,v:number,width:number,color:string) => {
+      ctx.lineWidth=width; ctx.strokeStyle=color; ctx.beginPath();
+      ctx.moveTo(x,y); ctx.lineTo(u,v); ctx.stroke();
+    };
+    const skin = '#f2bc93';
+    const sleeve = male ? '#8d796b' : skin;
+    stroke(0,0,-10,-19,11,'#44382f');
+    stroke(0,0,-10,-19,8,sleeve);
+    stroke(-10,-19,-11,-24,8,skin);
+    const finger = (x:number,y:number,u:number,v:number) => {
+      stroke(x,y,u,v,3.6,'#795341'); stroke(x,y,u,v,2.4,skin);
+    };
+    if (s.pose === 'peace') {
+      finger(-13,-25,-17,-33); finger(-10,-25,-8,-34);
+    } else if (s.pose === 'heart') {
+      finger(-13,-25,-9,-30); finger(-8,-25,-13,-29);
+    } else {
+      for (let n=0;n<4;n++) finger(-15+n*2.5,-25,-17+n*3.5,-30-Math.sin(n)*2);
+      finger(-8,-23,-5,-26);
+    }
+    ctx.restore();
+  }
 
   ctx.imageSmoothingEnabled = true;
   const prop = ACCESSORIES.find((p) => p.id === s.accessory)?.src;
@@ -170,14 +209,13 @@ export function renderScene(ctx: CanvasRenderingContext2D, s: Scene): void {
       case 'crown': put(58, a.cx, a.headTop + 12 - (58 * ratio) / 2); break;
       case 'moustache': put(38, a.cx, a.mouthY - 8 + (38 * ratio) / 2); break;
       case 'bowtie': put(30, a.cx, a.neckY + 3); break;
-      case 'bouquet': put(38, a.cx + 2, a.handY - 14); break;
+      case 'bouquet': put(33, male ? 107 : 103, a.handY - 15); break;
       case 'sign': {
         // Held up beside the head — or overhead in a group photo, where the
         // bride stands on that side. The board is left blank in the art and
         // lettered here, because image models misspell text.
-        const r = group
-          ? put(60, a.cx, a.headTop - 4 - (60 * ratio) / 2)
-          : put(66, a.cx + 26 + 33, a.eyeY - 40 + (66 * ratio) / 2);
+        const width = 43;
+        const r = put(width, male ? 107 : 103, a.handY - width * ratio * 0.44);
         ctx.fillStyle = '#2d1e18';
         ctx.font = `${Math.round(r.w * 0.17)}px "Press Start 2P", monospace`;
         ctx.textAlign = 'center';
@@ -188,24 +226,12 @@ export function renderScene(ctx: CanvasRenderingContext2D, s: Scene): void {
     }
   }
 
-  if (s.pose === 'peace') {
-    ctx.font = `${26 * K}px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('✌️', X(a.cx - 40), Y(a.eyeY - 6));
-  }
-  if (s.pose === 'heart') {
-    // On the left, like the peace sign: the right is where the "Ciee" board is held.
-    const hearts: [number, number, number, string][] = [
-      [a.cx - 30, a.neckY + 6, 3, '#e8687f'], [a.cx - 44, a.eyeY - 4, 4, '#e8687f'], [a.cx - 26, a.eyeY - 22, 2.5, '#f4e07b'],
-    ];
-    for (const [cx, cy, px, color] of hearts) {
-      ctx.fillStyle = color;
-      const p = px * K;
-      HEART.forEach((row, r) => [...row].forEach((c, i) => {
-        if (c === 'X') ctx.fillRect(X(cx) + (i - 2.5) * p, Y(cy) + (r - 2.5) * p, p, p);
-      }));
-    }
+  if (s.accessory === 'bouquet' || s.accessory === 'sign') {
+    // Restore the original knuckles in front of the stem or handle.
+    const handX = male ? 103 : 100;
+    const handY = male ? 144 : 147;
+    ctx.drawImage(s.look.sheet, handX, s.look.base * CELL_H + handY, 7, 6,
+      X(handX), Y(handY), 7*K, 6*K);
   }
   ctx.restore();
 }
