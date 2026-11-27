@@ -13,6 +13,7 @@ const photo = (id:string,alt:string,width=1365,height=2048):PrewedPhoto => ({
 /** Original photographs, in album order. Cover and portrait keep their own roles. */
 export const PREWED_PHOTOS: PrewedPhoto[] = [
   photo('portrait','Bersamamu di setiap langkah · 与你并肩'),
+  photo('dance-nov27','Whimpy dan Xinxin berdansa dalam busana pengantin · 携手共舞',1365,2048),
   photo('aisle','Satu langkah menuju selamanya · 走向我们的未来'),
   photo('prayer','Doa untuk bahtera kita · 为我们的婚姻祈祷'),
   photo('vows','Janji kita · 我们的约定'),
