@@ -18,7 +18,7 @@ export const PREWED_PHOTOS: PrewedPhoto[] = [
   photo('vows','Janji kita · 我们的约定'),
   photo('kiss','Sebuah kecupan · 轻轻一吻'),
   photo('sunglasses','Tawa kecil kita · 我们的小欢喜'),
-  photo('newspaper','Kabar bahagia · 我们的喜讯'),
+  photo('newspaper-portrait-nov27','Whimpy dan Xinxin memegang koran dalam potret hitam-putih'),
   photo('courtyard','Di halaman yang tenang · 静静的庭院'),
   photo('red-dress','Hanya kamu · 眼中只有你'),
   photo('garden','Kita dan musim yang indah · 我们与美好时光'),
