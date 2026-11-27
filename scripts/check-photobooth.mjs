@@ -8,10 +8,11 @@
  */
 import './_register-ts.mjs';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 
 // Dynamic: the resolver hook above has to be registered before photobooth.ts
 // pulls in its own extensionless imports.
-const { groupLayout } = await import('../src/game/photobooth.ts');
+const { groupLayout, renderScene, POSES, ACCESSORIES, GUEST_SHEET } = await import('../src/game/photobooth.ts');
 
 let n = 0;
 const ok = (c, m) => { assert.ok(c, m); n++; };
@@ -40,4 +41,35 @@ for (const body of ['pria', 'wanita']) {
   ok(Math.abs(xs[0] + xs[2]) < 0.001, `${body}: the trio is centred on the scene`);
 }
 
-console.log(`✓ photobooth: ${n} checks passed`);
+// Check that the same selection reaches the same piece of art in both layouts.
+const atlas = readFileSync(new URL('../public' + GUEST_SHEET, import.meta.url));
+assert.equal(atlas.toString('ascii', 8, 12), 'WEBP');
+assert.equal(atlas.toString('ascii', 12, 16), 'VP8X');
+const guests = { naturalWidth: atlas.readUIntLE(24, 3) + 1, naturalHeight: atlas.readUIntLE(27, 3) + 1 };
+const background = { naturalWidth: 960, naturalHeight: 1040 };
+const pair = { width: 300, height: 896 };
+const cells = new Set();
+for (const [row, accessory] of ACCESSORIES.entries()) {
+  for (const [poseIndex, pose] of POSES.entries()) {
+    for (const [index, body] of ['pria', 'wanita'].entries()) {
+      const source = [(poseIndex * 2 + index) * 240, row * 360, 240, 360];
+      for (const couple of [null, pair]) {
+        const calls = [];
+        const ctx = { drawImage: (...args) => calls.push(args), beginPath() {}, ellipse() {}, fill() {} };
+        renderScene(ctx, { background, guests, couple, body, pose: pose.id, accessory: accessory.id });
+        const guest = calls.filter(([image]) => image === guests);
+        assert.equal(guest.length, 1);
+        assert.deepEqual(guest[0].slice(1, 5), source);
+        assert.equal(calls.filter(([image]) => image === pair).length, couple ? 2 : 0);
+        const [, , , , , left, top, width, height] = guest[0];
+        const offset = couple ? groupLayout(body).guest : 0;
+        assert.equal(left + width / 2, 480 + offset);
+        assert.ok(Math.abs(top + height * 464 / 480 - 1000) < 0.01);
+      }
+      cells.add(source.join(','));
+    }
+  }
+}
+assert.equal(cells.size, 56);
+
+console.log(`✓ photobooth: ${n} layout checks and ${cells.size} guest variants passed`);

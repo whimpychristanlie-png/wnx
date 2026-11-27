@@ -63,6 +63,7 @@ export default function PhotoboxModal({ assets, outfit, onSaved, onClose }: Prop
   const [count, setCount] = useState<number | null>(null);
   const [flash, setFlash] = useState(false);
   const [result, setResult] = useState<string | null>(null);
+  const [rendering, setRendering] = useState(false);
   const resultBlob = useRef<Blob | null>(null);
   const [camError, setCamError] = useState(false);
   /** Camera tab: the couple standing either side of the guest. */
@@ -87,6 +88,7 @@ export default function PhotoboxModal({ assets, outfit, onSaved, onClose }: Prop
   /** Each composite bumps this; a slower, older one finishing late must not win. */
   const job = useRef(0);
   const stream = useRef<MediaStream | null>(null);
+  useEffect(() => () => { if (result) URL.revokeObjectURL(result); }, [result]);
   /** The photo itself, kept so a frame picked afterwards re-frames it instead of being ignored. */
   const shot = useRef<HTMLImageElement | HTMLCanvasElement | null>(null);
 
@@ -99,7 +101,7 @@ export default function PhotoboxModal({ assets, outfit, onSaved, onClose }: Prop
   useEffect(() => {
     const onHide = () => { if (document.hidden) { stopCam(); setStage('pick'); } };
     document.addEventListener('visibilitychange', onHide);
-    return () => { document.removeEventListener('visibilitychange', onHide); stopCam(); window.clearInterval(countdown.current); };
+    return () => { job.current++; document.removeEventListener('visibilitychange', onHide); stopCam(); window.clearInterval(countdown.current); };
   }, []);
 
   const startCamera = async () => {
@@ -162,6 +164,8 @@ export default function PhotoboxModal({ assets, outfit, onSaved, onClose }: Prop
     cv.height = OUT_H;
     const ctx = cv.getContext('2d');
     if (!ctx) return;
+    setRendering(true);
+    resultBlob.current = null;
 
     ctx.fillStyle = '#fdf6e2';
     ctx.fillRect(0, 0, OUT_W, OUT_H);
@@ -194,8 +198,11 @@ export default function PhotoboxModal({ assets, outfit, onSaved, onClose }: Prop
     if (mode === 'kamera' && overlay) ctx.drawImage(overlay, dx, dy, dw, dh);
     ctx.restore();
 
-    setResult(cv.toDataURL('image/png'));
-    cv.toBlob((b) => { resultBlob.current = b; }, 'image/png');
+    const blob = await new Promise<Blob | null>(resolve => cv.toBlob(resolve, 'image/png'));
+    if (mine !== job.current) return;
+    resultBlob.current = blob;
+    setResult(blob ? URL.createObjectURL(blob) : cv.toDataURL('image/png'));
+    setRendering(false);
     setStage('done');
     stopCam();
   }
@@ -235,18 +242,15 @@ export default function PhotoboxModal({ assets, outfit, onSaved, onClose }: Prop
     audio.play('click');
   };
 
-  /**
-   * iOS Safari ignores the `download` attribute, so the old one-liner did
-   * nothing at all on an iPhone — which is most of the guests. Share sheet
-   * first (that is how you get a photo into the camera roll on iOS), a real
-   * download where that exists, and a new tab as the last resort.
-   */
   const switchMode = (m: Mode) => {
     if (m === mode) return;
     audio.play('click');
     stopCam();
     window.clearInterval(countdown.current);
     setCount(null);
+    job.current++;
+    resultBlob.current = null;
+    setRendering(false);
     shot.current = null;
     setResult(null);
     setStage('pick');
@@ -260,32 +264,15 @@ export default function PhotoboxModal({ assets, outfit, onSaved, onClose }: Prop
     return navigator.canShare?.({ files: [file] }) ? file : null;
   };
 
-  /**
-   * Into the gallery. On an iPhone that means the share sheet's "Save Image";
-   * elsewhere a download, which the gallery picks up. Picture Perfect follows
-   * the "saved" toast: there is one toast slot, and its words say it too.
-   */
-  const saveToGallery = async () => {
-    const blob = resultBlob.current;
-    const file = IOS ? shareable(blob) : null;
-    if (file) {
-      try {
-        await navigator.share({ files: [file] });
-        onSaved();
-      } catch { /* dismissed: nothing was saved */ }
-      return;
-    }
-    const href = blob ? URL.createObjectURL(blob) : result;
-    if (!href) return;
-    const a = document.createElement('a');
-    a.href = href;
-    a.download = fileName();
-    a.rel = 'noopener';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    if (blob) window.setTimeout(() => URL.revokeObjectURL(href), 30_000);
-    toast('Foto tersimpan di galeri 📸', 'ok');
+  const iosPhoto = IOS && result && !rendering ? shareable(resultBlob.current) : null;
+  const saveOnIOS = async (file: File) => {
+    try {
+      await navigator.share({ files: [file] });
+      onSaved();
+    } catch { /* share sheet dismissed */ }
+  };
+  const startDownload = () => {
+    toast('Mengunduh foto 📸', 'ok');
     onSaved();
   };
 
@@ -298,7 +285,7 @@ export default function PhotoboxModal({ assets, outfit, onSaved, onClose }: Prop
       onSaved();
     } catch { /* dismissed */ }
   };
-  const canShare = !!result && typeof navigator.share === 'function' && typeof navigator.canShare === 'function';
+  const canShare = !!result && !rendering && typeof navigator.share === 'function' && typeof navigator.canShare === 'function';
 
   const framePicker = (
     <div>
@@ -325,9 +312,15 @@ export default function PhotoboxModal({ assets, outfit, onSaved, onClose }: Prop
   const save = (
     <div className="grid gap-2">
       <div className={`grid gap-2 ${canShare ? 'grid-cols-[1fr_auto]' : ''}`}>
-        <button type="button" onClick={() => void saveToGallery()} disabled={!result} className="btn-primary w-full">
-          Simpan Foto · 保存照片
-        </button>
+        {result && !rendering && !iosPhoto ? (
+          <a href={result} download={fileName()} onClick={startDownload} className="btn-primary w-full">
+            Simpan Foto · 保存照片
+          </a>
+        ) : (
+          <button type="button" disabled={!iosPhoto} onClick={() => iosPhoto && void saveOnIOS(iosPhoto)} className="btn-primary w-full">
+            Simpan Foto · 保存照片
+          </button>
+        )}
         {canShare && (
           <button type="button" onClick={() => void share()} className="btn-secondary px-4" aria-label="Bagikan foto">
             📤
@@ -335,7 +328,7 @@ export default function PhotoboxModal({ assets, outfit, onSaved, onClose }: Prop
         )}
       </div>
       <p className="m-0 text-center text-[11px] leading-4 text-ink-muted">
-        {IOS && canShare ? 'Di iPhone: pilih “Simpan Gambar” di menu yang muncul.' : 'Foto masuk ke folder Download dan muncul di Galeri.'}
+        {iosPhoto ? 'Di iPhone, pilih “Simpan Gambar” di menu yang muncul.' : 'Cari fotomu di folder Unduhan.'}
         {' '}Tidak jalan? Tekan lama fotonya, lalu simpan.
       </p>
     </div>
@@ -372,7 +365,17 @@ export default function PhotoboxModal({ assets, outfit, onSaved, onClose }: Prop
                 Menyiapkan foto · 正在准备照片…
               </div>
             )}
-          <CharacterBooth assets={assets} outfit={outfit} onScene={(scene) => { shot.current = scene; void composite(scene); }} />
+          <CharacterBooth assets={assets} outfit={outfit} onScene={(scene) => {
+            shot.current = scene;
+            if (scene) {
+              void composite(scene);
+            } else {
+              job.current++;
+              resultBlob.current = null;
+              setResult(null);
+              setRendering(false);
+            }
+          }} />
           {framePicker}
         </div>
       )}
