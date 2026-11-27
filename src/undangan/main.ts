@@ -423,3 +423,22 @@ form.addEventListener('submit', async (e) => {
   touched = false;
   validate();
 });
+
+const boothDialog = document.querySelector<HTMLDialogElement>('#boothDialog')!;
+const boothTab = document.querySelector<HTMLButtonElement>('#boothTab')!;
+boothTab.addEventListener('click', () => {
+  const frame = document.createElement('iframe');
+  frame.title = 'Photobooth · 合影';
+  frame.allow = 'camera; web-share';
+  frame.src = '/#invitation-photobooth';
+  boothDialog.append(frame);
+  boothDialog.showModal();
+});
+boothDialog.querySelector('button')!.addEventListener('click', () => boothDialog.close());
+window.addEventListener('message', event => {
+  if (event.origin === location.origin && event.source === boothDialog.querySelector('iframe')?.contentWindow && event.data === 'close-invitation-photobooth') boothDialog.close();
+});
+boothDialog.addEventListener('close', () => {
+  boothDialog.querySelector('iframe')?.remove();
+  boothTab.focus({preventScroll:true});
+});

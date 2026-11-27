@@ -228,6 +228,13 @@ export default function App() {
     setGreeting(npc.wish);
   }, []);
 
+  if (window.location.hash === '#invitation-photobooth' && assets) {
+    return <PhotoboxModal assets={assets} outfit={outfit} onSaved={() => complete('photo')} onClose={() => {
+      if (window.parent !== window) window.parent.postMessage('close-invitation-photobooth', window.location.origin);
+      else window.location.assign('/undangan/');
+    }} />;
+  }
+
   if (phase === 'loading' || !assets) {
     return <Preloader progress={pct} error={loadError} onRetry={load} />;
   }
