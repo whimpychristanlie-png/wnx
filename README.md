@@ -544,3 +544,29 @@ scripts/          Pengecekan otomatis yang dijalankan npm run check
 - **SVG yang berisi teks harus di-inline**, bukan `<img src>`, karena font `@import` di dalamnya tidak bisa dimuat sebagai gambar.
 - **Tiga pria dan dua wanita** berjalan di taman. `src/game/roster.ts` satu-satunya tempat yang mengaturnya.
 - **iOS Safari:** overlay mengambil posisi dari `visualViewport`, dan volume musik tidak bisa diatur lewat JS, jadi fade di-*bake* ke file audionya.
+
+
+### Edit dan hapus ucapan sendiri
+
+Tombol **Edit** dan **Hapus** muncul pada ucapan milik browser pengirim,
+baik di `/undangan/` maupun RSVP dalam game. Edit memperbaiki teks ucapan;
+hapus meminta konfirmasi dan menghapus ucapan beserta RSVP tersebut.
+Setiap ucapan baru memakai kunci acak 256 bit; server hanya menyimpan hash-nya.
+Daftar publik tidak memuat kunci atau hash, dan mengetahui nama/ID ucapan
+bukan izin mengubahnya. Perangkat lain, mode privat, atau browser yang sudah
+dihapus datanya tidak bisa mengedit ucapan sebelumnya. Ucapan lama yang sudah
+terkirim sebelum fitur ini belum memiliki kunci; perubahan perlu dilakukan
+pemilik situs melalui database. Ucapan lama yang masih mengantre tetap dapat
+diedit/dibatalkan dari browser asal.
+
+Ucapan yang belum sampai tersimpan lokal dan dicoba lagi setiap 30 detik saat
+halaman terbuka, saat koneksi kembali, dan saat halaman kembali aktif. Membuka
+undangan di perangkat lain tidak mengirim antrean dari perangkat asal.
+Jangan hapus data browser sebelum ucapan berhasil terkirim. Pembatalan yang
+perlu dikonfirmasi server disimpan sebagai antrean penghapusan.
+
+Jika log menampilkan `DATABASE_URL is not set`, isi environment variable
+`DATABASE_URL` untuk deployment Production dengan connection string database
+Postgres milik project (gunakan koneksi pooled), lalu redeploy. Jangan taruh
+connection string dalam kode atau environment variable berawalan `VITE_`.
+Endpoint `/api/wishes` harus mengembalikan HTTP 200 setelah database terhubung.

@@ -25,7 +25,7 @@ globalThis.fetch = async (_url, init = {}) => {
   return { ok: r.status < 300, status: r.status, json: async () => r.body };
 };
 
-const { add, load, isPending } = await import('../src/services/wishes.ts');
+const { add, load, isPending, changeWish, canManage } = await import('../src/services/wishes.ts');
 const { calendarUrl } = await import('../src/services/calendar.ts');
 
 let n = 0;
@@ -71,6 +71,7 @@ ok(r.wishes.some((w) => w.message === 'lewat sinyal jelek' && w.mine && !isPendi
 // already on the server (the response was lost, not the request): forget, never re-post
 net = () => 'down';
 await add(draft('sudah sampai'));
+store.set('wq.wishes.v1', JSON.stringify(local().map(w => ({...w, editToken:undefined}))));
 posts = 0;
 net = (m, body) => (m === 'GET'
   ? { status: 200, body: { wishes: [...serverRows, { ...draft('sudah sampai'), id: '7', at: 2 }] } }
@@ -94,6 +95,36 @@ const saved = local().find((w) => w.message === 'Barakallah');
 net = () => ({ status: 200, body: { wishes: [{ ...saved, mine: undefined }] } });
 r = await load();
 ok(r.wishes.find((w) => w.id === saved.id)?.mine === true, 'server copy of my own wish is marked mine');
+
+// --- ownership and failure-safe edits/deletes
+store.clear();
+net = accept;
+const owned = (await add(draft('original'))).wish;
+ok(canManage(owned) && /^[a-f0-9]{64}$/.test(owned.editToken), 'new wish has a random private capability');
+ok(!canManage({...owned, mine:false}) && !canManage({...owned, editToken:undefined}), 'public and legacy saved wishes have no mutation controls');
+net = (method, body) => ({status:200, body:{wish:{...owned, message:body?.message}}});
+const edited = await changeWish(owned, 'corrected');
+ok(edited.message === 'corrected' && local()[0].message === 'corrected', 'server-confirmed edit updates local copy');
+net = () => 'down';
+await assert.rejects(changeWish(edited, 'unsaved'));
+ok(local()[0].message === 'corrected', 'failed edit keeps the last confirmed text');
+await assert.rejects(changeWish(edited, null));
+ok(local().length === 1, 'failed delete retains saved wish');
+net = () => ({status:200,body:{deleted:true}});
+await changeWish(edited, null);
+ok(local().length === 0, 'confirmed delete clears own local copy');
+net = () => ({status:200,body:{wishes:[]}});
+ok((await load()).wishes.length === 0, 'deleted wish never reappears from local cache');
+net = () => 'down';
+const pending = (await add(draft('offline typo'))).wish;
+await changeWish(pending, 'offline correction');
+ok(local()[0].message === 'offline correction', 'pending wish can be edited offline');
+await changeWish(local()[0], null);
+ok(local()[0].cancelled && !(await load()).wishes.length, 'pending cancellation is hidden but retained for reconciliation');
+posts=0;
+net = method => ({status:200,body:method === 'GET' ? {wishes:[]} : {deleted:true}});
+await load();
+ok(posts === 0 && local().length === 0, 'cancelled pending wish is deleted by capability, never posted again');
 
 // --- calendar: both ends from the event's own time, converted from WIB
 const dates = (e) => new URL(calendarUrl(e)).searchParams.get('dates');

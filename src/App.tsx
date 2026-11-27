@@ -18,7 +18,7 @@ import { useVisualViewport } from './hooks/useVisualViewport';
 import { preloadAssets, type LoadedAssets } from './services/assets';
 import { ownsKeyboard } from './game/input';
 import { audio } from './services/audio';
-import { add as addWish, load as loadWishes, PENDING_NOTE } from './services/wishes';
+import { add as addWish, watchWishes, PENDING_NOTE } from './services/wishes';
 import { allCore, award, loadProgress, MILESTONES, saveProgress, type Flag, type Progress } from './services/progress';
 import { wedding } from './data/weddingInfo';
 import { giftName } from './data/gifts';
@@ -109,9 +109,13 @@ export default function App() {
   // Fetched while the guest is still on the envelope, so the garden is
   // populated by the time they walk into it.
   useEffect(() => {
-    let alive = true;
-    void loadWishes().then((r) => { if (alive) setWishes(r.wishes); });
-    return () => { alive = false; };
+    const stop = watchWishes(r => setWishes(r.wishes));
+    const changed = (event: Event) => {
+      const {id, wish} = (event as CustomEvent<{id:string;wish:Wish|null}>).detail;
+      setWishes(prev => prev.flatMap(w => w.id === id ? (wish ? [wish] : []) : [w]));
+    };
+    window.addEventListener('wish-changed', changed);
+    return () => { stop(); window.removeEventListener('wish-changed', changed); };
   }, []);
 
   useEffect(() => {

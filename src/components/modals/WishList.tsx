@@ -1,5 +1,6 @@
 import { AttendanceChip } from '../ui/Chip';
-import { relativeTime, stickerUrl } from '../../services/wishes';
+import { relativeTime, stickerUrl, canManage, isPending } from '../../services/wishes';
+import { manageWish } from '../../services/wishActions';
 import type { Wish } from '../../game/types';
 
 export default function WishList({ wishes }: { wishes: Wish[] }) {
@@ -25,7 +26,12 @@ export default function WishList({ wishes }: { wishes: Wish[] }) {
               className="h-16 w-16 rounded-md border-[1.5px] border-wood-400 bg-parchment-300 object-contain p-1"
             />
           )}
+          {isPending(w) && <p className="text-[12px] text-rose-700">Belum sampai ke server · dicoba lagi otomatis</p>}
           <AttendanceChip attending={w.attending} />
+          {canManage(w) && <div className="wish-actions">
+            <button type="button" onClick={() => void manageWish(w, 'edit')} aria-label={`Edit ucapan ${w.name}`}>Edit</button>
+            <button type="button" onClick={() => void manageWish(w, 'delete')} aria-label={`Hapus ucapan ${w.name}`}>Hapus</button>
+          </div>}
         </article>
       ))}
     </div>

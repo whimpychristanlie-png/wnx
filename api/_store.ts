@@ -118,12 +118,31 @@ export async function isRateLimited(db: Db, sender: string): Promise<boolean> {
   return Number(rows[0]?.n ?? 0) >= RATE_MAX;
 }
 
-export async function insertWish(db: Db, w: ParsedWish, sender: string): Promise<WishRow> {
+export async function insertWish(db: Db, w: ParsedWish, sender: string, editHash: string | null = null): Promise<WishRow> {
   const { rows } = await db.query(
-    `insert into wishes (name, message, attending, guests, sticker, gender, sender)
-     values ($1, $2, $3, $4, $5, $6, $7)
+    `insert into wishes (name, message, attending, guests, sticker, gender, sender, edit_hash)
+     values ($1, $2, $3, $4, $5, $6, $7, $8)
+     on conflict (edit_hash) where edit_hash is not null do update set edit_hash = excluded.edit_hash
      returning id, name, message, attending, guests, sticker, gender, created_at`,
-    [w.name, w.message, w.attending, w.guests, w.sticker, w.gender, sender],
+    [w.name, w.message, w.attending, w.guests, w.sticker, w.gender, sender, editHash],
   );
   return toRow(rows[0]);
+}
+
+/** Only a secret held by the submitting browser grants mutation rights. */
+export function ownershipHash(token: unknown): string | null {
+  return typeof token === 'string' && /^[a-f0-9]{64}$/.test(token)
+    ? createHash('sha256').update(token).digest('hex') : null;
+}
+
+export async function editWish(db: Db, id: string, hash: string, message: string): Promise<WishRow | null> {
+  const { rows } = await db.query(
+    `update wishes set message = $3 where id = $1 and edit_hash = $2
+     returning id, name, message, attending, guests, sticker, gender, created_at`, [id, hash, message]);
+  return rows[0] ? toRow(rows[0]) : null;
+}
+
+export async function deleteWish(db: Db, id: string | null, hash: string): Promise<boolean> {
+  const { rows } = await db.query('delete from wishes where ($1::bigint is null or id = $1) and edit_hash = $2 returning id', [id, hash]);
+  return rows.length === 1;
 }

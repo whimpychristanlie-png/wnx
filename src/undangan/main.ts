@@ -1,6 +1,7 @@
 import { DRESS_COLORS } from '../data/presentation';
 import { coupleNames, wedding } from '../data/weddingInfo';
-import { add as addWish, isPending, load as loadWishes, PENDING_NOTE, relativeTime, stickerUrl, STICKERS } from '../services/wishes';
+import { add as addWish, isPending, watchWishes, canManage, PENDING_NOTE, relativeTime, stickerUrl, STICKERS } from '../services/wishes';
+import { manageWish } from '../services/wishActions';
 import { calendarUrl } from '../services/calendar';
 import { audio, haptic } from '../services/audio';
 import type { Wish } from '../game/types';
@@ -264,8 +265,19 @@ function wishCard(w: Wish, i: number): HTMLElement {
     foot.append(img);
   }
   el.append(top, h('p', 'w-msg', w.message));
-  if (isPending(w)) el.append(h('p', 'w-pending', 'Belum terkirim · dikirim ulang otomatis'));
+  if (isPending(w)) el.append(h('p', 'w-pending', 'Belum sampai ke server · dicoba lagi otomatis'));
   el.append(foot);
+  if (canManage(w)) {
+    const actions = h('div', 'wish-actions');
+    for (const [action, title] of [['edit', 'Edit'], ['delete', 'Hapus']] as const) {
+      const button = document.createElement('button');
+      button.type = 'button'; button.textContent = title;
+      button.setAttribute('aria-label', `${title} ucapan ${w.name}`);
+      button.addEventListener('click', () => void manageWish(w, action));
+      actions.append(button);
+    }
+    el.append(actions);
+  }
   return el;
 }
 
@@ -286,7 +298,20 @@ moreBtn.addEventListener('click', () => {
   moreBtn.hidden = wishes.length <= shown;
 });
 
-void loadWishes().then((res) => { wishes = res.wishes; renderWishes(); });
+const wishServiceNote = h('p', 'w-pending');
+wishServiceNote.setAttribute('role', 'status');
+list.before(wishServiceNote);
+watchWishes(res => {
+  wishes = res.wishes;
+  wishServiceNote.hidden = res.live;
+  wishServiceNote.textContent = res.live ? '' : 'Layanan ucapan belum dapat dihubungi. Ucapan yang belum terkirim tersimpan di browser pengirim.';
+  renderWishes();
+});
+window.addEventListener('wish-changed', e => {
+  const {id, wish} = (e as CustomEvent<{id:string;wish:Wish|null}>).detail;
+  wishes = wishes.flatMap(w => w.id === id ? (wish ? [wish] : []) : [w]);
+  renderWishes();
+});
 
 // ---------- Form ----------
 const MAX_MSG = 200;

@@ -2,7 +2,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { Pool } from 'pg';
 import { SCHEMA_SQL } from './_schema.js';
 import {
-  type Db, insertWish, isRateLimited, listWishes, parseWish, senderHash,
+  ownershipHash, editWish, deleteWish, type Db, insertWish, isRateLimited, listWishes, parseWish, senderHash,
 } from './_store.js';
 
 /**
@@ -71,11 +71,11 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       // a guest who posts and then shows a friend must not be told the feed is
       // empty — five seconds keeps it feeling live while still collapsing a
       // thundering herd onto one origin read.
-      res.setHeader('cache-control', 'public, s-maxage=5, stale-while-revalidate=20');
+      res.setHeader('cache-control', 'no-store');
       return send(res, 200, { wishes: await listWishes(d) });
     }
 
-    if (req.method === 'POST') {
+    if (['POST', 'PATCH', 'DELETE'].includes(req.method ?? '')) {
       const chunks: Buffer[] = [];
       let size = 0;
       for await (const c of req) {
@@ -90,18 +90,37 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
         return send(res, 400, { error: 'Body tidak valid' });
       }
 
+      const b = body as Record<string, unknown> | null;
+      const hash = ownershipHash(b?.editToken);
+      if (req.method !== 'POST') {
+        res.setHeader('cache-control', 'no-store');
+        if (!hash || (b?.id !== null && (typeof b?.id !== 'string' || !/^[1-9][0-9]{0,18}$/.test(b.id)))) {
+          return send(res, 403, { error: 'Ucapan ini hanya dapat diubah dari browser pengirim.' });
+        }
+        if (req.method === 'DELETE') {
+          const removed = await deleteWish(d, b!.id as string | null, hash);
+          return send(res, (removed || b?.id === null) ? 200 : 403, (removed || b?.id === null) ? { deleted: true } : { error: 'Tidak dapat menghapus ucapan ini.' });
+        }
+        if (b?.id === null) return send(res, 400, { error: 'ID ucapan belum tersedia.' });
+        const message = typeof b!.message === 'string' ? (b!.message as string).trim() : '';
+        if (!message || message.length > 200) return send(res, 400, { error: 'Ucapan harus berisi 1–200 karakter.' });
+        const wish = await editWish(d, b!.id as string, hash, message);
+        return send(res, wish ? 200 : 403, wish ? { wish } : { error: 'Tidak dapat mengubah ucapan ini.' });
+      }
+      if (b?.editToken !== undefined && !hash) return send(res, 400, { error: 'Kunci ucapan tidak valid.' });
       const parsed = parseWish(body);
       if (!parsed.ok) return send(res, 400, { error: parsed.error });
 
       const sender = senderHash(clientIp(req), process.env.SENDER_SALT ?? 'wedding-quest');
-      if (await isRateLimited(d, sender)) {
+      const existing = hash ? await d.query('select id from wishes where edit_hash = $1', [hash]) : { rows: [] };
+      if (!existing.rows.length && await isRateLimited(d, sender)) {
         return send(res, 429, { error: 'Sabar ya, ucapanmu sudah terkirim 🙏' });
       }
 
-      return send(res, 201, { wish: await insertWish(d, parsed.wish, sender) });
+      return send(res, 201, { wish: await insertWish(d, parsed.wish, sender, hash) });
     }
 
-    res.setHeader('allow', 'GET, POST');
+    res.setHeader('allow', 'GET, POST, PATCH, DELETE');
     return send(res, 405, { error: 'Method not allowed' });
   } catch (err) {
     console.error('[api/wishes]', err);

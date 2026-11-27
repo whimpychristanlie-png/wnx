@@ -45,6 +45,10 @@ export interface Wish {
   at: number;
   /** True for the wish submitted by this browser, so it can be highlighted. */
   mine?: boolean;
+  /** Private capability, never returned by the public API. */
+  editToken?: string;
+  /** Pending cancellation; hidden locally until the server confirms deletion. */
+  cancelled?: boolean;
 }
 
 export interface DeviceProfile {

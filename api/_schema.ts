@@ -29,6 +29,9 @@ create table if not exists wishes (
   constraint wishes_gender_ok   check (gender in ('pria', 'wanita'))
 );
 
+alter table wishes add column if not exists edit_hash text;
+create unique index if not exists wishes_edit_hash_idx on wishes(edit_hash) where edit_hash is not null;
+
 create index if not exists wishes_created_at_idx on wishes (created_at desc);
 create index if not exists wishes_sender_idx     on wishes (sender, created_at desc);
 

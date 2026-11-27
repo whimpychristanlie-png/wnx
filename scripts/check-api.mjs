@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { SCHEMA_SQL } from '../api/_schema.ts';
 import { PGlite } from '@electric-sql/pglite';
 import {
-  parseWish, senderHash, listWishes, insertWish, isRateLimited, RATE_MAX, MAX_MESSAGE,
+  ownershipHash, editWish, deleteWish, parseWish, senderHash, listWishes, insertWish, isRateLimited, RATE_MAX, MAX_MESSAGE,
 } from '../api/_store.ts';
 
 const db = new PGlite();
@@ -73,5 +73,24 @@ n += 2;
 // --- the couple's guest list
 const { rows } = await db.query('select * from rsvp_summary');
 ok(Number(rows[0].seats_taken) > 0, 'rsvp_summary totals the seats');
+
+// --- private capabilities, retries and mutation authorization
+const token = 'ab'.repeat(32), otherToken = 'cd'.repeat(32);
+const hash = ownershipHash(token), otherHash = ownershipHash(otherToken);
+ok(!ownershipHash('short') && hash && hash !== token, 'only strong tokens are accepted, stored hashed');
+const protectedWish = await insertWish(db, parseWish(good).wish, sender, hash);
+const retried = await insertWish(db, parseWish(good).wish, sender, hash);
+ok(retried.id === protectedWish.id, 'a lost-response retry reuses one row');
+ok(await editWish(db, protectedWish.id, otherHash, 'hacked') === null, 'another guest cannot edit by knowing the id');
+ok(!(await deleteWish(db, protectedWish.id, otherHash)), 'another guest cannot delete by knowing the id');
+ok(await editWish(db, saved.id, hash, 'hacked') === null, 'a token cannot claim an existing legacy wish');
+const changed = await editWish(db, protectedWish.id, hash, 'fixed');
+ok(changed.message === 'fixed' && changed.at === protectedWish.at, 'owner can correct text without changing RSVP or timestamp');
+const publicRows = await listWishes(db);
+ok(publicRows.every(w => !('edit_hash' in w) && !('editToken' in w)), 'public feed exposes no ownership secrets');
+ok(await deleteWish(db, protectedWish.id, hash), 'owner can delete own wish');
+ok(!(await listWishes(db)).some(w => w.id === protectedWish.id), 'deleted wish leaves the feed');
+await db.exec(SCHEMA_SQL);
+ok(true, 'schema migration can run again safely');
 
 console.log(`✓ wishes store: ${n} checks passed`);
