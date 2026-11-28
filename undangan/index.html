@@ -245,9 +245,9 @@
     </figure>
 
     <!-- ====================== UCAPAN & RSVP ====================== -->
-    <section class="sec tight" id="rsvp">
+    <section class="sec tight" id="rsvp" tabindex="-1" aria-labelledby="rsvpHeading">
       <p class="eyebrow rv">Kehadiran &amp; Ucapan · 出席与祝福</p>
-      <h2 class="h2 rv blur" style="--d:100ms">Kirim Ucapan · 留下祝福</h2>
+      <h2 class="h2 rv blur" id="rsvpHeading" style="--d:100ms">Kirim Ucapan · 留下祝福</h2>
       <p class="lead rv" style="--d:200ms">Mohon konfirmasi kehadiran Anda dan tinggalkan ucapan untuk kami. 请确认是否出席，并为我们留下祝福。</p>
 
       <form class="form rv" id="rsvpForm" novalidate>
@@ -323,7 +323,10 @@
   <figure class="viewer-photo"><img id="viewerImage" alt="" draggable="false" /></figure>
 </dialog>
 
-<button type="button" id="boothTab" aria-haspopup="dialog" aria-label="Buka Photobooth · 打开拍照亭"><span>Photobooth</span><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 7h4l2-3h6l2 3h4v13H3z"/><circle cx="12" cy="13" r="3.5"/></svg></button>
+<div class="invitation-side-tabs" role="group" aria-label="Akses cepat · 快捷入口">
+<a id="wishTab" class="side-tab" href="#rsvp" aria-label="Kirim Ucapan · 留下祝福"><span>Kirim Ucapan</span><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 4h16v12H9l-5 4V4z"/><path d="M8 8h8M8 12h5"/></svg></a>
+<button type="button" class="side-tab" id="boothTab" aria-haspopup="dialog" aria-label="Buka Photobooth · 打开拍照亭"><span>Photobooth</span><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 7h4l2-3h6l2 3h4v13H3z"/><circle cx="12" cy="13" r="3.5"/></svg></button>
+</div>
 <dialog id="boothDialog" aria-label="Photobooth"><button type="button" aria-label="Tutup Photobooth">×</button></dialog>
 <button class="music" id="music" aria-label="Putar atau jeda musik" aria-pressed="false">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="2.2" /><path d="M12 5.5A6.5 6.5 0 0 1 18.5 12" /></svg>
