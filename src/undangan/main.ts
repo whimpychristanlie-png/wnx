@@ -449,6 +449,14 @@ form.addEventListener('submit', async (e) => {
   validate();
 });
 
+// Jump to the RSVP section without opening the mobile keyboard.
+document.querySelector<HTMLAnchorElement>('#wishTab')!.addEventListener('click', event => {
+  event.preventDefault();
+  const section = document.querySelector<HTMLElement>('#rsvp')!;
+  section.focus({preventScroll:true});
+  section.scrollIntoView({behavior:reduce ? 'instant' : 'smooth', block:'start'});
+});
+
 const boothDialog = document.querySelector<HTMLDialogElement>('#boothDialog')!;
 const boothTab = document.querySelector<HTMLButtonElement>('#boothTab')!;
 boothTab.addEventListener('click', () => {
